@@ -18,10 +18,10 @@ export const ACTION_BUTTONS_NAME = "ActionButtons";
 
 export const RESOURCES = [
   "case",
-  "incident",
-  "tracing_request",
+  // "incident",
+  // "tracing_request",
   "registry_record",
-  "family",
+  // "family",
   "potential_match",
   "role",
   "user",

@@ -68,11 +68,11 @@ const buildFields = (recordType, formsByParentForm, i18n) => {
 
 export default (formSections, i18n) =>
   [
-    RECORD_TYPES.cases,
-    RECORD_TYPES.tracing_requests,
-    RECORD_TYPES.incidents,
-    RECORD_TYPES.registry_records,
-    RECORD_TYPES.families
+    RECORD_TYPES.cases
+    // RECORD_TYPES.tracing_requests,
+    // RECORD_TYPES.incidents,
+    // RECORD_TYPES.registry_records,
+    // RECORD_TYPES.families
   ].map(recordType => {
     const uniqueID = `associated_form_sections_${recordType}`;
 

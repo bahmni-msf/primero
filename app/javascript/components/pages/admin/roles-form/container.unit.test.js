@@ -130,7 +130,7 @@ describe("<RolesForm />", () => {
     });
 
     it("renders role form sections", () => {
-      expect(component.find(FormSection)).to.have.lengthOf(8);
+      expect(component.find(FormSection)).to.have.lengthOf(4);
     });
 
     it("renders core forms disabled and empty", () => {

@@ -20,7 +20,7 @@ describe("pages/admin/<RolesForm> - utils", () => {
         adminLevelMap: fromJS({})
       });
 
-      expect(formsToRender).to.have.sizeOf(8);
+      expect(formsToRender).to.have.sizeOf(4);
     });
   });
 
@@ -36,8 +36,7 @@ describe("pages/admin/<RolesForm> - utils", () => {
 
       const expected = {
         form_section_read_write: {
-          case_form_1: "r",
-          incident_form_1: "rw"
+          case_form_1: "r"
         }
       };
 
@@ -54,8 +53,7 @@ describe("pages/admin/<RolesForm> - utils", () => {
 
       const expected = {
         form_section_read_write: {
-          case_form_1: "",
-          incident_form_1: "rw"
+          case_form_1: ""
         }
       };
 

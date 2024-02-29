@@ -76,13 +76,13 @@ describe("<Nav />", () => {
       expect(component.find(NavLink).findWhere(link => link.prop("to") === ROUTES.cases)).to.have.lengthOf(2);
     });
 
-    it("renders incidents link", () => {
-      expect(component.find(NavLink).findWhere(link => link.prop("to") === ROUTES.incidents)).to.have.lengthOf(2);
+    it("Should not render incidents link", () => {
+      expect(component.find(NavLink).findWhere(link => link.prop("to") === ROUTES.incidents)).to.have.lengthOf(0);
     });
 
-    it("renders tracing requests link", () => {
+    it("Should not render tracing requests link", () => {
       expect(component.find(NavLink).findWhere(link => link.prop("to") === ROUTES.tracing_requests)).to.have.lengthOf(
-        2
+        0
       );
     });
 
