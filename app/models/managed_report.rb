@@ -29,7 +29,7 @@ class ManagedReport < ValueObject
           :grouped_by, :by, :created_by_groups, :workflow, :owned_by_groups,
           :created_organization, :owned_by_agency_id, { status: {}, registration_date: {} }
         ],
-        module_id: PrimeroModule::CP
+        module_id: PrimeroModule::POTM
       ),
       Permission::REFERRALS_TRANSFERS_REPORT => ManagedReport.new(
         id: 'referrals_transfers_report',
@@ -40,7 +40,7 @@ class ManagedReport < ValueObject
           :grouped_by, :by, :created_by_groups, :owned_by_groups, :created_organization, :owned_by_agency_id,
           { status: {}, created_at: {}, referral_transfer_status: {} }
         ],
-        module_id: PrimeroModule::CP
+        module_id: PrimeroModule::POTM
       ),
       Permission::VIOLENCE_TYPE_REPORT => ManagedReport.new(
         id: 'violence_type_report',
@@ -51,7 +51,7 @@ class ManagedReport < ValueObject
           :grouped_by, :by, :created_by_groups, :cp_incident_violence_type, :owned_by_groups,
           :created_organization, :owned_by_agency_id, { status: {}, registration_date: {} }
         ],
-        module_id: PrimeroModule::CP
+        module_id: PrimeroModule::POTM
       ),
       Permission::VIOLATION_REPORT => ManagedReport.new(
         id: 'violations',

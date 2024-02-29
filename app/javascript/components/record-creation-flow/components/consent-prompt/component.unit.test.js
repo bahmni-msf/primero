@@ -18,7 +18,7 @@ describe("<ConsentPrompt />", () => {
       id: 1,
       unique_id: "consent",
       parent_form: "case",
-      module_ids: fromJS([MODULES.CP]),
+      module_ids: fromJS([MODULES.POTM]),
       order: 1,
       form_group_id: "group_1",
       order_form_group: 2,
@@ -39,7 +39,7 @@ describe("<ConsentPrompt />", () => {
     i18n: { t: value => value },
     recordType: RECORD_PATH.cases,
     searchValue: "",
-    primeroModule: MODULES.CP,
+    primeroModule: MODULES.POTM,
     dataProtectionFields: ["legitimate_basis"],
     goToNewCase: () => {},
     openConsentPrompt: true

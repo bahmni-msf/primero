@@ -408,7 +408,7 @@ class Filter < ValueObject
       filters += [MY_CASES, WORKFLOW]
       filters << AGENCY if user.admin?
       filters += [STATUS, AGE_RANGE, SEX] + user_based_filters(user) + [NO_ACTIVITY]
-      filters << DATE_CASE if user.module?(PrimeroModule::CP)
+      filters << DATE_CASE if user.module?(PrimeroModule::POTM)
       filters << ENABLED
       filters += photo_filters(user)
       filters
@@ -418,8 +418,8 @@ class Filter < ValueObject
       filters = []
       filters += approvals_filters(user)
       filters += field_based_filters(user)
-      filters << RISK_LEVEL if user.module?(PrimeroModule::CP)
-      filters << CURRENT_LOCATION if user.module?(PrimeroModule::CP)
+      filters << RISK_LEVEL if user.module?(PrimeroModule::POTM)
+      filters << CURRENT_LOCATION if user.module?(PrimeroModule::POTM)
       filters << AGENCY_OFFICE if user.module?(PrimeroModule::GBV)
       filters << USER_GROUP if user.module?(PrimeroModule::GBV) && user.user_group_filter?
       filters += reporting_location_filters(user)
@@ -462,13 +462,13 @@ class Filter < ValueObject
     end
 
     def protection_status_filter(user, filter_fields)
-      return [PROTECTION_STATUS] if visible?('protection_status', filter_fields) && user.module?(PrimeroModule::CP)
+      return [PROTECTION_STATUS] if visible?('protection_status', filter_fields) && user.module?(PrimeroModule::POTM)
 
       []
     end
 
     def urgent_protection_concern_filter(user, filter_fields)
-      if user.module?(PrimeroModule::CP) && visible?('urgent_protection_concern', filter_fields)
+      if user.module?(PrimeroModule::POTM) && visible?('urgent_protection_concern', filter_fields)
         return [URGENT_PROTECTION_CONCERN]
       end
 
@@ -476,24 +476,24 @@ class Filter < ValueObject
     end
 
     def type_of_risk_filter(user, filter_fields)
-      return [TYPE_OF_RISK] if user.module?(PrimeroModule::CP) && visible?('type_of_risk', filter_fields)
+      return [TYPE_OF_RISK] if user.module?(PrimeroModule::POTM) && visible?('type_of_risk', filter_fields)
 
       []
     end
 
     def reporting_location_filters(user)
-      return [] unless user.module?(PrimeroModule::CP)
+      return [] unless user.module?(PrimeroModule::POTM)
 
       role = user&.role
       return [] unless role
 
       filters = []
-      filters << REPORTING_LOCATION.call(reporting_location_data(role, 'case')) if user.module?(PrimeroModule::CP)
+      filters << REPORTING_LOCATION.call(reporting_location_data(role, 'case')) if user.module?(PrimeroModule::POTM)
       filters
     end
 
     def photo_filters(user)
-      return [] unless user.module?(PrimeroModule::CP)
+      return [] unless user.module?(PrimeroModule::POTM)
 
       role = user&.role
       return [] unless role
@@ -509,7 +509,7 @@ class Filter < ValueObject
       filters = [FLAGGED_CASE] + violence_type_filter(user) + social_worker_filter(user)
       filters += agency_office_filter(user) + user_group_filter(user) + status_filters(user)
       filters += violation_filter(user)
-      filters += [AGE_RANGE] if user.module?(PrimeroModule::GBV) || user.module?(PrimeroModule::CP)
+      filters += [AGE_RANGE] if user.module?(PrimeroModule::GBV) || user.module?(PrimeroModule::POTM)
       filters += children_verification_and_location_filters(user)
       filters += [INCIDENT_DATE] + unaccompanied_filter(user)
       filters += perpetrator_category_filters(user) + armed_force_group_filters(user)

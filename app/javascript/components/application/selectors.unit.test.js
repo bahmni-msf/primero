@@ -397,7 +397,7 @@ describe("Application - Selectors", () => {
           application: {
             modules: [
               {
-                unique_id: MODULES.CP,
+                unique_id: MODULES.POTM,
                 options: {
                   use_webhook_sync_for: [RECORD_TYPES.cases]
                 }
@@ -405,7 +405,7 @@ describe("Application - Selectors", () => {
             ]
           }
         }),
-        MODULES.CP,
+        MODULES.POTM,
         RECORD_TYPES.cases
       );
 
@@ -413,7 +413,7 @@ describe("Application - Selectors", () => {
     });
 
     it("should return false iif record and module don't have enabled webhook sync", () => {
-      const result = selectors.getLimitedConfigUI(stateWithRecords, MODULES.CP, RECORD_TYPES.cases);
+      const result = selectors.getLimitedConfigUI(stateWithRecords, MODULES.POTM, RECORD_TYPES.cases);
 
       expect(result).to.be.false;
     });

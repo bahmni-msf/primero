@@ -52,10 +52,6 @@ export const PUSH_NOTIFICATION_SUBSCRIPTION_REFRESH_INTERVAL = 15 * 1000 * 60;
 
 export const CASE = "case";
 export const CASES = "cases";
-export const TRACING_REQUEST = "tracing_request";
-export const TRACING_REQUESTS = "tracing_requests";
-export const INCIDENT = "incident";
-export const INCIDENTS = "incidents";
 export const REGISTRY_RECORD = "registry_record";
 export const REGISTRY_RECORDS = "registry_records";
 export const FAMILIES = "families";
@@ -64,26 +60,26 @@ export const FAMILY = "family";
 // Type of records available singular (key): plural (value)
 export const RECORD_TYPES = {
   [CASES]: CASE,
-  [TRACING_REQUESTS]: TRACING_REQUEST,
-  [INCIDENTS]: INCIDENT,
-  [REGISTRY_RECORDS]: REGISTRY_RECORD,
-  [FAMILIES]: FAMILY,
+  // [TRACING_REQUESTS]: TRACING_REQUEST,
+  // [INCIDENTS]: INCIDENT,
+  // [REGISTRY_RECORDS]: REGISTRY_RECORD,
+  // [FAMILIES]: FAMILY,
   all: "all"
 };
 
 export const RECORD_TYPES_PLURAL = {
-  [CASE]: CASES,
-  [TRACING_REQUEST]: TRACING_REQUESTS,
-  [INCIDENT]: INCIDENTS,
-  [REGISTRY_RECORD]: REGISTRY_RECORDS,
-  [FAMILY]: FAMILIES
+  [CASE]: CASES
+  // [TRACING_REQUEST]: TRACING_REQUESTS,
+  // [INCIDENT]: INCIDENTS,
+  // [REGISTRY_RECORD]: REGISTRY_RECORDS,
+  // [FAMILY]: FAMILIES
 };
 
 // Max Age allowed in age ranges
 export const AGE_MAX = 999;
 
 export const MODULES = Object.freeze({
-  CP: "primeromodule-cp",
+  POTM: "primeromodule-cp",
   GBV: "primeromodule-gbv",
   MRM: "primeromodule-mrm"
 });
@@ -108,7 +104,7 @@ export const INCIDENT_CASE_ID_DISPLAY_FIELD = "case_id_display";
 export const INCIDENT_SHORT_ID_FIELD = "short_id";
 
 export const CONSENT_GIVEN_FIELD_BY_MODULE = Object.freeze({
-  [MODULES.CP]: ["consent_for_services", "disclosure_other_orgs"],
+  [MODULES.POTM]: ["consent_for_services", "disclosure_other_orgs"],
   [MODULES.GBV]: ["consent_for_services"]
 });
 
@@ -393,38 +389,11 @@ export const APPLICATION_NAV = (permissions, userId) => {
       validateWithUserPermissions: true
     },
     {
-      name: "navigation.incidents",
-      to: ROUTES.incidents,
-      icon: "incidents",
-      jewelCount: "incident",
-      resources: RESOURCES.incidents,
-      actions: READ_RECORDS,
-      validateWithUserPermissions: true
-    },
-    {
-      name: "navigation.tracing_request",
-      to: ROUTES.tracing_requests,
-      icon: "tracing_request",
-      jewelCount: "tracing_request",
-      resources: RESOURCES.tracing_requests,
-      actions: READ_RECORDS,
-      validateWithUserPermissions: true
-    },
-    {
       name: "navigation.registry_records",
       to: ROUTES.registry_records,
       icon: "registry_records",
       jewelCount: "registry_record",
       resources: RESOURCES.registry_records,
-      actions: READ_RECORDS,
-      validateWithUserPermissions: true
-    },
-    {
-      name: "navigation.families",
-      to: ROUTES.families,
-      icon: "families",
-      jewelCount: "families",
-      resources: RESOURCES.families,
       actions: READ_RECORDS,
       validateWithUserPermissions: true
     },

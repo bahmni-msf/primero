@@ -68,7 +68,7 @@ describe("<RecordListToolbar />", () => {
       online: true,
       modules: [
         PrimeroModuleRecord({
-          unique_id: MODULES.CP,
+          unique_id: MODULES.POTM,
           name: "CP",
           associated_record_types: [RECORD_TYPES.cases],
           options: {
@@ -79,7 +79,7 @@ describe("<RecordListToolbar />", () => {
       ]
     },
     user: {
-      modules: [MODULES.CP],
+      modules: [MODULES.POTM],
       permissions: {
         cases: [ACTIONS.CREATE]
       }

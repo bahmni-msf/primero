@@ -70,7 +70,7 @@ const Container = ({
     getRecordFormsByUniqueId(state, {
       checkVisible: false,
       formName: INCIDENT_SUBFORM,
-      primeroModule: MODULES.CP,
+      primeroModule: MODULES.POTM,
       recordType: RECORD_TYPES[recordType]
     })
   ).first();
@@ -78,7 +78,7 @@ const Container = ({
     getRecordFormsByUniqueId(state, {
       checkVisible: false,
       formName: SERVICES_SUBFORM,
-      primeroModule: MODULES.CP,
+      primeroModule: MODULES.POTM,
       recordType: RECORD_TYPES[recordType]
     })
   ).first();

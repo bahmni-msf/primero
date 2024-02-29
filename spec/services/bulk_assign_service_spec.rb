@@ -27,17 +27,17 @@ describe BulkAssignService do
 
   let!(:child) do
     create(:child, name: 'Test', owned_by: user.user_name, consent_for_services: true,
-                   disclosure_other_orgs: true, module_id: PrimeroModule::CP)
+                   disclosure_other_orgs: true, module_id: PrimeroModule::POTM)
   end
 
   let!(:child2) do
     create(:child, name: 'Test2', owned_by: user.user_name, consent_for_services: true,
-                   disclosure_other_orgs: true, module_id: PrimeroModule::CP)
+                   disclosure_other_orgs: true, module_id: PrimeroModule::POTM)
   end
 
   let!(:child3) do
     create(:child, name: 'Test2', owned_by: user.user_name, consent_for_services: true,
-                   disclosure_other_orgs: true, module_id: PrimeroModule::CP)
+                   disclosure_other_orgs: true, module_id: PrimeroModule::POTM)
   end
 
   describe '#assign_records!' do

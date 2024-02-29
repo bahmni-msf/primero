@@ -27,7 +27,7 @@ describe("<ReportsForm /> - action-creators", () => {
       body: {
         data: { en: "test" },
         record_type: RECORD_PATH.cases,
-        module_id: MODULES.CP
+        module_id: MODULES.POTM
       },
       saveMethod: SAVE_METHODS.new,
       message: "Saved successfully"

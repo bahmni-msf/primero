@@ -384,7 +384,7 @@ export const INSIGHTS_CONFIG = {
       ].map(filter => FieldRecord(filter))
     }
   },
-  [MODULES.CP]: {
+  [MODULES.POTM]: {
     workflow_report: {
       ids: WORKFLOW_SUBREPORTS,
       defaultFilterValues: {

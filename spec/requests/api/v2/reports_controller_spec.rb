@@ -80,13 +80,13 @@ describe Api::V2::ReportsController, type: :request do
                                 associated_record_types: %w[case tracing_request incident],
                                 primero_program: @program, form_sections: [FormSection.create!(name: 'form_1')])
     @report1 = Report.create(name_en: 'Protection Concerns By Location', description_en: '',
-                             module_id: PrimeroModule::CP, record_type: 'case', aggregate_by: ['owned_by_location0'],
+                             module_id: PrimeroModule::POTM, record_type: 'case', aggregate_by: ['owned_by_location0'],
                              disaggregate_by: ['protection_concerns'],
                              filters: [{ 'attribute' => 'status', 'value' => [Record::STATUS_OPEN] },
                                        { 'attribute' => 'record_state', 'value' => ['true'] }],
                              editable: false)
     @report2 = Report.create(name_en: 'Services report', description_en: '',
-                             module_id: PrimeroModule::CP, record_type: 'reportable_service',
+                             module_id: PrimeroModule::POTM, record_type: 'reportable_service',
                              filters: [
                                { 'attribute' => 'status', 'value' => [Record::STATUS_OPEN] },
                                { 'attribute' => 'record_state', 'value' => ['true'] }
@@ -261,7 +261,7 @@ describe Api::V2::ReportsController, type: :request do
             fr: 'Description in French'
           },
           record_type: 'case',
-          module_id: PrimeroModule::CP,
+          module_id: PrimeroModule::POTM,
           graph: false,
           disabled: false,
           fields: [
@@ -367,7 +367,7 @@ describe Api::V2::ReportsController, type: :request do
             fr: 'Description in French'
           },
           record_type: 'case',
-          module_id: PrimeroModule::CP,
+          module_id: PrimeroModule::POTM,
           fields: [
             {
               name: 'owned_by_location',

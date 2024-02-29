@@ -17,7 +17,7 @@ describe TransitionNotifyJob, type: :job do
     @child = child_with_created_by(
       @owner.user_name,
       name: 'child1',
-      module_id: PrimeroModule::CP,
+      module_id: PrimeroModule::POTM,
       case_id_display: '12345',
       consent_for_services: true,
       disclosure_other_orgs: true

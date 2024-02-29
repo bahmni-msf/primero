@@ -47,7 +47,7 @@ describe("<WorkflowIndividualCases> - pages/dashboard/components/workflow-indivi
     application: {
       modules: [
         PrimeroModuleRecord({
-          unique_id: MODULES.CP,
+          unique_id: MODULES.POTM,
           name: "CP",
           workflows: {
             case: [
@@ -63,7 +63,7 @@ describe("<WorkflowIndividualCases> - pages/dashboard/components/workflow-indivi
       ]
     },
     user: {
-      modules: [MODULES.CP],
+      modules: [MODULES.POTM],
       permissions
     }
   });

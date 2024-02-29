@@ -141,7 +141,7 @@ describe Child do
       Family.create!(
         data: {
           family_number: '40bf9109',
-          module_id: PrimeroModule::CP,
+          module_id: PrimeroModule::POTM,
           family_size: 1,
           family_notes: 'Notes about the family',
           family_members: [

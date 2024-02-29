@@ -59,7 +59,7 @@ class MatchingConfiguration
     @id = id || 'administration'
 
     @match_configuration = match_fields
-    primero_module = PrimeroModule.find_by(unique_id: PrimeroModule::CP)
+    primero_module = PrimeroModule.find_by(unique_id: PrimeroModule::POTM)
     @form_ids = primero_module.try(:form_section_ids)
   end
 

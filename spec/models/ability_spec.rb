@@ -1104,7 +1104,7 @@ describe Ability do
     let(:child_with_attachment) do
       child_with_attachment = Child.new_with_user(
         attachment_user,
-        { name: 'Test', consent_for_services: true, disclosure_other_orgs: true, module_id: PrimeroModule::CP }
+        { name: 'Test', consent_for_services: true, disclosure_other_orgs: true, module_id: PrimeroModule::POTM }
       )
       child_with_attachment.save! && child_with_attachment
     end

@@ -84,7 +84,7 @@ class Referral < Transition
     case record.module_id
     when PrimeroModule::GBV
       record.consent_for_services
-    when PrimeroModule::CP
+    when PrimeroModule::POTM
       record.disclosure_other_orgs && record.consent_for_services
     else
       false

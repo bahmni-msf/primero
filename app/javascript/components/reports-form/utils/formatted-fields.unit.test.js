@@ -18,7 +18,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
       FormSectionRecord({
         name: { en: "testFormCase" },
         parent_form: "case",
-        module_ids: MODULES.CP,
+        module_ids: MODULES.POTM,
         fields: [
           FieldRecord({
             display_name: {
@@ -49,7 +49,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
       FormSectionRecord({
         name: { en: "testFormIncident" },
         parent_form: "incident",
-        module_ids: MODULES.CP,
+        module_ids: MODULES.POTM,
         fields: [
           FieldRecord({
             display_name: {
@@ -72,7 +72,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
       FormSectionRecord({
         name: { en: "testFormCase" },
         parent_form: "tracing_request",
-        module_ids: MODULES.CP,
+        module_ids: MODULES.POTM,
         fields: [
           FieldRecord({
             display_name: {
@@ -165,7 +165,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
     ];
 
     expect(
-      formattedFields(formSections, MODULES.CP, RECORD_TYPES.cases, i18n, reportingLocationConfig, reportableFields)
+      formattedFields(formSections, MODULES.POTM, RECORD_TYPES.cases, i18n, reportingLocationConfig, reportableFields)
     ).to.deep.equal(expected);
   });
 
@@ -174,7 +174,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
       FormSectionRecord({
         name: { en: "Status Form" },
         parent_form: RECORD_TYPES.cases,
-        module_ids: [MODULES.CP],
+        module_ids: [MODULES.POTM],
         fields: [
           FieldRecord({
             display_name: {
@@ -190,7 +190,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
         name: { en: "Nested Form" },
         unique_id: "nested_form",
         parent_form: RECORD_TYPES.cases,
-        module_ids: [MODULES.CP],
+        module_ids: [MODULES.POTM],
         is_nested: true,
         fields: [
           FieldRecord({
@@ -223,7 +223,7 @@ describe("<ReportForm>/utils/formattedFields()", () => {
 
     it("should not return fields on nested forms", () => {
       expect(
-        formattedFields(formSections, MODULES.CP, RECORD_TYPES.cases, i18n, reportingLocationConfig, [])
+        formattedFields(formSections, MODULES.POTM, RECORD_TYPES.cases, i18n, reportingLocationConfig, [])
       ).to.deep.equal([
         {
           display_text: "Status Field",

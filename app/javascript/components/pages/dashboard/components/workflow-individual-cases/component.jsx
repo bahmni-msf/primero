@@ -17,7 +17,7 @@ import WorkFlowStep from "./components";
 const Component = ({ loadingIndicator }) => {
   const i18n = useI18n();
 
-  const workflowLabels = useMemoizedSelector(state => getWorkflowLabels(state, MODULES.CP, RECORD_TYPES.cases));
+  const workflowLabels = useMemoizedSelector(state => getWorkflowLabels(state, MODULES.POTM, RECORD_TYPES.cases));
   const casesWorkflow = useMemoizedSelector(state => getWorkflowIndividualCases(state));
 
   const renderSteps = workflowLabels

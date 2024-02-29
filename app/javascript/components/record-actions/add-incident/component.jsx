@@ -32,7 +32,7 @@ const Component = ({ open, close, pending, recordType, selectedRowsIndex, setPen
   const form = useMemoizedSelector(state =>
     getRecordFormsByUniqueId(state, {
       recordType: RECORD_TYPES[recordType],
-      primeroModule: MODULES.CP,
+      primeroModule: MODULES.POTM,
       formName: INCIDENT_SUBFORM,
       checkVisible: false
     })

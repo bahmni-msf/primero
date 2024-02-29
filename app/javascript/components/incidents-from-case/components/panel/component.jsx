@@ -35,7 +35,7 @@ const Component = ({
     setExpanded(!expanded);
   };
 
-  const violationType = incident.get("module_id", false) === MODULES.CP ? CP_VIOLENCE_TYPE : GBV_VIOLENCE_TYPE;
+  const violationType = incident.get("module_id", false) === MODULES.POTM ? CP_VIOLENCE_TYPE : GBV_VIOLENCE_TYPE;
   const incidentTypeData = incident.get(violationType, false) || undefined;
   const incidentUniqueID = incident.get("unique_id", false);
   const incidentDateData = incident.get("incident_date", false);

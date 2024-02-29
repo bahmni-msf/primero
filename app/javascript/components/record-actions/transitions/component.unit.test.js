@@ -33,7 +33,7 @@ describe("<Transitions />", () => {
     name_first: "W",
     name_last: "D",
     name: "W D",
-    module_id: MODULES.CP,
+    module_id: MODULES.POTM,
     consent_for_services: true,
     disclosure_other_orgs: true
   });

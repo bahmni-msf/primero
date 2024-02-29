@@ -82,7 +82,7 @@ describe ReportFieldService do
       id: 1,
       name_en: 'Protection Concerns By Location',
       description_en: '',
-      module_id: PrimeroModule::CP,
+      module_id: PrimeroModule::POTM,
       record_type: 'case',
       aggregate_by: ['owned_by_location'],
       disaggregate_by: ['protection_concerns'],

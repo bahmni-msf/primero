@@ -49,7 +49,7 @@ const Component = ({
   const alertTypes = useOptions({ source: APPROVAL_TYPE_LOOKUP });
 
   const showTypeOfCasePlan = userModules
-    .filter(userModule => userModule.unique_id === MODULES.CP)
+    .filter(userModule => userModule.unique_id === MODULES.POTM)
     // eslint-disable-next-line camelcase
     ?.first()?.options?.selectable_approval_types;
 

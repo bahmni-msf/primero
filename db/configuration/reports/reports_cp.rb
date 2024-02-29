@@ -14,9 +14,9 @@ default_case_filters = [
 Report.where(editable: false).destroy_all
 
 Report.create({
-                name_all: 'Registration CP',
+                name_all: 'Registration POTM',
                 description_all: 'Case registrations over time',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['registration_date'],
                 group_dates_by: 'month',
@@ -27,9 +27,9 @@ Report.create({
 
 # TODO: This doesn't account for referrals
 Report.create({
-                name_all: 'Caseload Summary CP',
+                name_all: 'Caseload Summary POTM',
                 description_all: 'Number of cases for each case worker',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['owned_by'],
                 filters: default_case_filters,
@@ -38,9 +38,9 @@ Report.create({
               })
 
 Report.create({
-                name_all: 'Case status by case worker CP',
+                name_all: 'Case status by case worker POTM',
                 description_all: 'Status of cases held by case workers',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['owned_by'],
                 disaggregate_by: ['status'],
@@ -50,9 +50,9 @@ Report.create({
               })
 
 Report.create({
-                name_all: 'Cases by Agency CP',
+                name_all: 'Cases by Agency POTM',
                 description_all: 'Number of cases broken down by agency',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['owned_by_agency_id'],
                 filters: default_case_filters,
@@ -63,7 +63,7 @@ Report.create({
 Report.create({
                 name_all: 'Cases by Nationality',
                 description_all: 'Number of cases broken down by nationality',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['nationality'],
                 filters: default_case_filters,
@@ -74,7 +74,7 @@ Report.create({
 Report.create({
                 name_all: 'Cases by Age and Sex',
                 description_all: 'Number of cases broken down by age and sex',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['age'],
                 disaggregate_by: ['sex'],
@@ -87,7 +87,7 @@ Report.create({
 Report.create({
                 name_all: 'Cases by Protection Concern',
                 description_all: 'Number of cases broken down by protection concern and sex',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['protection_concerns'],
                 disaggregate_by: ['sex'],
@@ -99,7 +99,7 @@ Report.create({
 Report.create({
                 name_all: 'Current Care Arrangements',
                 description_all: 'The care arrangements broken down by age and sex',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['care_arrangements_type'],
                 disaggregate_by: %w[sex age],
@@ -112,7 +112,7 @@ Report.create({
 Report.create({
                 name_all: 'Workflow Status',
                 description_all: 'Cases broken down by current workflow status',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['workflow_status'],
                 group_ages: true,
@@ -124,7 +124,7 @@ Report.create({
 Report.create(
   name_all: 'Follow up by month by Agency',
   description_all: 'Number of followups broken down by month and agency',
-  module_id: PrimeroModule::CP,
+  module_id: PrimeroModule::POTM,
   record_type: 'reportable_follow_up',
   aggregate_by: ['followup_date'],
   disaggregate_by: ['owned_by_agency_id'],
@@ -156,7 +156,7 @@ Report.create(
 Report.create(
   name_all: 'Follow up by week by Agency',
   description_all: 'Number of followups broken down by week and agency',
-  module_id: PrimeroModule::CP,
+  module_id: PrimeroModule::POTM,
   record_type: 'reportable_follow_up',
   aggregate_by: ['followup_date'],
   disaggregate_by: ['owned_by_agency_id'],
@@ -188,7 +188,7 @@ Report.create(
 Report.create(
   name_all: 'Cases per Month',
   description_all: ' Number of newly registered cases per month per location ',
-  module_id: PrimeroModule::CP,
+  module_id: PrimeroModule::POTM,
   record_type: 'case',
   aggregate_by: ['owned_by_location'],
   disaggregate_by: ['created_at'],
@@ -202,7 +202,7 @@ Report.create(
 Report.create({
                 name_all: 'Cases with case plans',
                 description_all: 'How many registered cases have case plans?',
-                module_id: PrimeroModule::CP,
+                module_id: PrimeroModule::POTM,
                 record_type: 'case',
                 aggregate_by: ['has_case_plan'],
                 group_ages: false,

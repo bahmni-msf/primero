@@ -39,14 +39,14 @@ describe("<RecordCreationFlow />", () => {
     open: true,
     onClose: () => {},
     recordType: RECORD_PATH.cases,
-    primeroModule: MODULES.CP
+    primeroModule: MODULES.POTM
   };
 
   const initialState = fromJS({
     application: {
       modules: [
         {
-          unique_id: MODULES.CP,
+          unique_id: MODULES.POTM,
           options: {
             data_protection_case_create_field_names: ["legitimate_basis"]
           }

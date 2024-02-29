@@ -14,7 +14,7 @@ describe Api::V2::ChildrenController, type: :request do
     )
 
     @agency = Agency.create!(name: 'Test Agency', agency_code: 'TA', services: ['Test type'])
-    @cp = PrimeroModule.create!(unique_id: PrimeroModule::CP, name: 'CP', description: 'Child Protection',
+    @cp = PrimeroModule.create!(unique_id: PrimeroModule::POTM, name: 'CP', description: 'Child Protection',
                                 associated_record_types: %w[case tracing_request incident])
     @form_a = FormSection.create!(
       unique_id: 'form_a', name: 'A', parent_form: 'case', form_group_id: 'm', fields: [

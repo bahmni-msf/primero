@@ -37,7 +37,7 @@ export default (locale, query) => {
       order_form_group: 130,
       parent_form: RECORD_TYPES.cases,
       editable: true,
-      module_ids: [MODULES.CP],
+      module_ids: [MODULES.POTM],
       form_group_id: "tracing",
       is_nested: false,
       subform_prevent_item_removal: false,
@@ -127,7 +127,7 @@ export default (locale, query) => {
     [REGISTRY_FROM_CASE]: FormSectionRecord({
       id: generateKey(),
       unique_id: REGISTRY_FROM_CASE,
-      module_ids: [MODULES.CP],
+      module_ids: [MODULES.POTM],
       name: { [locale]: "forms.record_types.registry_details" },
       order: 2,
       form_group_id: IDENTIFICATION_REGISTRATION,
@@ -142,7 +142,7 @@ export default (locale, query) => {
     [FAMILY_FROM_CASE]: FormSectionRecord({
       id: generateKey(),
       unique_id: FAMILY_FROM_CASE,
-      module_ids: [MODULES.CP],
+      module_ids: [MODULES.POTM],
       name: { [locale]: "forms.record_types.family_record" },
       order: 3,
       form_group_id: IDENTIFICATION_REGISTRATION,

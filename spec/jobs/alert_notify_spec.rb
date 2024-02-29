@@ -14,7 +14,7 @@ describe AlertNotifyJob, type: :job do
     @child = Child.new(
       owned_by: @owner.user_name,
       name: 'child',
-      module_id: PrimeroModule::CP,
+      module_id: PrimeroModule::POTM,
       case_id_display: '12345',
       consent_for_services: true,
       disclosure_other_orgs: true

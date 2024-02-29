@@ -66,7 +66,7 @@ class Importers::CsvRecordImporter < ValueObject
     row_hash = row.to_h.with_indifferent_access
     id = row_hash.delete(:id)
     record_hash[:id] = id if id.present?
-    row_hash[:module_id] ||= PrimeroModule::CP
+    row_hash[:module_id] ||= PrimeroModule::POTM
     record_hash[:data] = row_hash.merge(owned_by:, created_by:)
     record = record_class.new(record_hash)
     record.run_callbacks(:create) { false }

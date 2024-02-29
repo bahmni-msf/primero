@@ -33,7 +33,7 @@ describe AuditLogJob, type: :job do
     @user_a = User.create!(full_name: 'Test User 1', user_name: 'test_user_a', email: 'test_user_a@localhost.com',
                            agency_id: agency_a.id, role:)
 
-    @child = child_with_created_by(@user_a.user_name, name: 'child1', module_id: PrimeroModule::CP,
+    @child = child_with_created_by(@user_a.user_name, name: 'child1', module_id: PrimeroModule::POTM,
                                                       case_id_display: '12345')
   end
 

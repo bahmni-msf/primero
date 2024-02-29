@@ -181,16 +181,12 @@ describe("Verifying config constant", () => {
         expect(constants.TOKEN_REFRESH_INTERVAL).equal(30 * 1000 * 60);
         expect(constants.RECORD_TYPES).to.deep.equal({
           cases: "case",
-          tracing_requests: "tracing_request",
-          incidents: "incident",
-          all: "all",
-          registry_records: "registry_record",
-          families: "family"
+          all: "all"
         });
         expect(constants.AGE_MAX).equal(999);
         expect(constants.PERMITTED_URL).to.be.an("array");
         expect(constants.MODULES).to.deep.equal({
-          CP: "primeromodule-cp",
+          POTM: "primeromodule-cp",
           GBV: "primeromodule-gbv",
           MRM: "primeromodule-mrm"
         });

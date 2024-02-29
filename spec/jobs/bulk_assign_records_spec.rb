@@ -29,7 +29,7 @@ describe BulkAssignRecordsJob, type: :job do
 
   let!(:child) do
     create(:child, name: 'Test', owned_by: user.user_name, consent_for_services: true,
-                   disclosure_other_orgs: true, module_id: PrimeroModule::CP)
+                   disclosure_other_orgs: true, module_id: PrimeroModule::POTM)
   end
 
   before :each do

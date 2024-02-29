@@ -71,7 +71,7 @@ describe("<RecordFormToolbar />", () => {
     record,
     recordType: RECORD_TYPES[RECORD_PATH.cases],
     shortId: record.get("short_id"),
-    primeroModule: MODULES.CP,
+    primeroModule: MODULES.POTM,
     handleFormSubmit: () => {}
   };
 
@@ -80,7 +80,7 @@ describe("<RecordFormToolbar />", () => {
       online: true,
       modules: [
         PrimeroModuleRecord({
-          unique_id: MODULES.CP,
+          unique_id: MODULES.POTM,
           name: "CP",
           associated_record_types: [RECORD_TYPES.cases],
           options: {
@@ -103,7 +103,7 @@ describe("<RecordFormToolbar />", () => {
       ]
     },
     user: {
-      modules: [MODULES.CP],
+      modules: [MODULES.POTM],
       permissions: {
         cases: [ACTIONS.CREATE, ACTIONS.FLAG, ACTIONS.SYNC_EXTERNAL]
       }

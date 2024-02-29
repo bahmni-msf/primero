@@ -26,7 +26,7 @@ describe("components/index-filters/<TabFilters>", () => {
   };
 
   it("does not render a FilterCategory if the module is not MRM", () => {
-    const state = fromJS({ user: { modules: [MODULES.CP] } });
+    const state = fromJS({ user: { modules: [MODULES.POTM] } });
     const { component } = setupMockFormComponent(TabFilters, { props: defaultProps, state });
 
     expect(component.find(FilterCategory)).to.be.empty;

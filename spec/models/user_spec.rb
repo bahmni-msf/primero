@@ -779,7 +779,7 @@ describe User do
       @form_section = FormSection.create!(unique_id: 'test_form', name: 'Test Form',
                                           fields: [Field.new(name: 'national_id_no', type: 'text_field',
                                                              display_name: 'National ID No')])
-      @cp = PrimeroModule.create!(unique_id: PrimeroModule::CP, name: 'CP', description: 'Child Protection',
+      @cp = PrimeroModule.create!(unique_id: PrimeroModule::POTM, name: 'CP', description: 'Child Protection',
                                   associated_record_types: %w[case tracing_request incident], primero_program: @program,
                                   form_sections: [@form_section])
       @role1 = Role.create!(name: 'Admin role', unique_id: 'role_admin',
@@ -866,7 +866,7 @@ describe User do
       PrimeroModule.create!(
         primero_program: PrimeroProgram.first,
         name: 'PrimeroModule',
-        unique_id: PrimeroModule::CP,
+        unique_id: PrimeroModule::POTM,
         associated_record_types: ['case'],
         form_sections: []
       )
@@ -931,7 +931,7 @@ describe User do
         data: {
           name: 'Test',
           owned_by: 'user_creator',
-          module_id: PrimeroModule::CP,
+          module_id: PrimeroModule::POTM,
           consent_for_services: true,
           disclosure_other_orgs: true
         }

@@ -24,7 +24,7 @@ describe Alertable do
         ]
       )
       cp = PrimeroModule.create!(
-        unique_id: PrimeroModule::CP,
+        unique_id: PrimeroModule::POTM,
         name: 'CP',
         description: 'Child Protection',
         associated_record_types: %w[case tracing_request incident],
@@ -333,7 +333,7 @@ describe Alertable do
       )
 
       cp = PrimeroModule.create!(
-        unique_id: PrimeroModule::CP,
+        unique_id: PrimeroModule::POTM,
         name: 'CP',
         description: 'Child Protection',
         associated_record_types: %w[case tracing_request incident],

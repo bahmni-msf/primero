@@ -11,7 +11,7 @@ describe RecordScopeService do
     @program = PrimeroProgram.create!(unique_id: 'primeroprogram-primero', name: 'Primero',
                                       description: 'Default Primero Program')
 
-    @cp = PrimeroModule.create!(unique_id: PrimeroModule::CP, name: 'CP', description: 'Child Protection',
+    @cp = PrimeroModule.create!(unique_id: PrimeroModule::POTM, name: 'CP', description: 'Child Protection',
                                 associated_record_types: %w[case tracing_request incident], primero_program: @program)
 
     @agency1 = Agency.create!(name: 'Agency 1', agency_code: 'agency1')

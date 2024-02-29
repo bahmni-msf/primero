@@ -23,7 +23,7 @@ describe("<DocumentField />", () => {
     arrayHelpers: {
       form: {
         values: {
-          module_id: MODULES.CP
+          module_id: MODULES.POTM
         }
       }
     },

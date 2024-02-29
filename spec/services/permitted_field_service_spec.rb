@@ -314,7 +314,7 @@ describe PermittedFieldService, search: true do
       PrimeroModule.create!(
         primero_program: PrimeroProgram.first,
         name: 'PrimeroModule',
-        unique_id: PrimeroModule::CP,
+        unique_id: PrimeroModule::POTM,
         associated_record_types: ['case'],
         form_sections: [form_a, form_b]
       )
@@ -380,7 +380,7 @@ describe PermittedFieldService, search: true do
       PrimeroModule.create!(
         primero_program: PrimeroProgram.first,
         name: 'PrimeroModule',
-        unique_id: PrimeroModule::CP,
+        unique_id: PrimeroModule::POTM,
         associated_record_types: ['case'],
         form_sections: []
       )

@@ -29,7 +29,7 @@ const Component = ({ open, close, pending, recordType, selectedRowsIndex, setPen
   const form = useMemoizedSelector(state =>
     getRecordFormsByUniqueId(state, {
       recordType: RECORD_TYPES[recordType],
-      primeroModule: MODULES.CP,
+      primeroModule: MODULES.POTM,
       formName: SERVICES_SUBFORM
     })
   );
@@ -63,7 +63,7 @@ const Component = ({ open, close, pending, recordType, selectedRowsIndex, setPen
   };
 
   const fieldsProps = {
-    recordModuleID: MODULES.CP,
+    recordModuleID: MODULES.POTM,
     recordType,
     fields: subformSectionID.toJS().fields
   };

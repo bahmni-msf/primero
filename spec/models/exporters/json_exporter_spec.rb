@@ -87,7 +87,7 @@ describe Exporters::JsonExporter do
         name_first: 'Test',
         estimated: false,
         nickname: 'Testy',
-        module_id: PrimeroModule::CP,
+        module_id: PrimeroModule::POTM,
         family_details_section: [
           { relation_name: 'John', relation: 'father' },
           { relation_name: 'Mary', relation: 'mother' }

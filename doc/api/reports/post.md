@@ -27,7 +27,7 @@ Create a new report and return the entire record.
       "fr": 'Description in French'
     },
     "record_type": 'case',
-    "module_id": PrimeroModule::CP,
+    "module_id": PrimeroModule::POTM,
     "graph": false,
     "fields": [
       {

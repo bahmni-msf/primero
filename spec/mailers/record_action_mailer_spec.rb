@@ -49,12 +49,12 @@ describe RecordActionMailer, type: :mailer do
       )
       @arabic_owner = create(:user, user_name: 'jdoe', full_name: 'Jhon Doe', email: 'arabic_owner@primero.dev',
                                     locale: 'ar-LB')
-      @child = child_with_created_by(@owner.user_name, name: 'child1', module_id: PrimeroModule::CP,
+      @child = child_with_created_by(@owner.user_name, name: 'child1', module_id: PrimeroModule::POTM,
                                                        case_id_display: '12345')
       @arabic_child = child_with_created_by(
         @arabic_owner.user_name,
         name: 'arabic_child1',
-        module_id: PrimeroModule::CP,
+        module_id: PrimeroModule::POTM,
         ase_id_display: '67890'
       )
       @referral = Referral.new(transitioned_by: 'manager1', transitioned_to: 'duser', record: @child)
@@ -422,7 +422,7 @@ describe RecordActionMailer, type: :mailer do
                           name_en: 'Form Section Name', name_fr: 'Nom de la section du formulaire')
       @owner = create :user, user_name: 'owner', full_name: 'Owner', email: 'owner@primero.dev'
       @provider = create :user, user_name: 'provider', full_name: 'Provider', email: 'provider@primero.dev'
-      @child = Child.new_with_user(@owner, { name: 'child', module_id: PrimeroModule::CP, case_id_display: '12345' })
+      @child = Child.new_with_user(@owner, { name: 'child', module_id: PrimeroModule::POTM, case_id_display: '12345' })
       @child.save!
       @child.assigned_user_names = [@provider.user_name]
       @child.save!

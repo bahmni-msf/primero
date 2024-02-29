@@ -46,7 +46,7 @@ const Component = () => {
 
   const defaultFilterValues = {
     recordType: RECORD_TYPES.cases,
-    primeroModule: MODULES.CP
+    primeroModule: MODULES.POTM
   };
   const [filterValues, setFilterValues] = useState(defaultFilterValues);
 

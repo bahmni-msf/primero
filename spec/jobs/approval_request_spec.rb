@@ -15,7 +15,7 @@ describe ApprovalRequestJob, type: :job do
     @manager2 = create :user, role:, email: 'manager2@primero.dev', send_mail: true, user_name: 'manager2'
     @owner = create :user, user_name: 'jnelson', full_name: 'Jordy Nelson', email: 'owner@primero.dev'
     @child = child_with_created_by(
-      @owner.user_name, name: 'child1', module_id: PrimeroModule::CP, case_id_display: '12345'
+      @owner.user_name, name: 'child1', module_id: PrimeroModule::POTM, case_id_display: '12345'
     )
   end
 

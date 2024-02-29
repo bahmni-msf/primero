@@ -81,7 +81,7 @@ module Exporters
       )
       form_family.save!
 
-      primero_module = PrimeroModule.new(unique_id: PrimeroModule::CP, name: 'CP')
+      primero_module = PrimeroModule.new(unique_id: PrimeroModule::POTM, name: 'CP')
       primero_module.save(validate: false)
       permissions = Permission.new(
         resource: Permission::CASE, actions: [Permission::READ, Permission::RECEIVE_REFERRAL]
@@ -108,7 +108,7 @@ module Exporters
           age: 12,
           sex: 'male',
           address: 'case_1_address',
-          module_id: PrimeroModule::CP,
+          module_id: PrimeroModule::POTM,
           family_details_section: [
             { unique_id: '004', relation_name: 'John', relation: 'father' },
             { unique_id: '005', relation_name: 'Mary', relation: 'mother' }

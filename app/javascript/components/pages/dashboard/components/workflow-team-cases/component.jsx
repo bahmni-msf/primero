@@ -16,7 +16,7 @@ import { NAME } from "./constants";
 const Component = ({ loadingIndicator }) => {
   const i18n = useI18n();
 
-  const workflowLabels = useMemoizedSelector(state => getWorkflowLabels(state, MODULES.CP, RECORD_TYPES.cases));
+  const workflowLabels = useMemoizedSelector(state => getWorkflowLabels(state, MODULES.POTM, RECORD_TYPES.cases));
   const casesWorkflowTeam = useMemoizedSelector(state => getWorkflowTeamCases(state));
 
   return (

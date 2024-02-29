@@ -6,7 +6,7 @@
 class PrimeroModule < ApplicationRecord
   include ConfigurationRecord
 
-  CP = 'primeromodule-cp'
+  POTM = 'primeromodule-cp'
   GBV = 'primeromodule-gbv'
   MRM = 'primeromodule-mrm'
 
@@ -61,11 +61,11 @@ class PrimeroModule < ApplicationRecord
   end
 
   def core_resource
-    [CP, GBV, MRM].include?(id)
+    [POTM, GBV, MRM].include?(id)
   end
 
   def self.cp
-    find_by(unique_id: CP)
+    find_by(unique_id: POTM)
   end
 
   def self.gbv
