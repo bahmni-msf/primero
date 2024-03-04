@@ -8,7 +8,6 @@
             "name": "application",
             "image": "",
             "cpu": 0,
-            "memoryReservation": 0,
             "portMappings": [
                 {
                     "containerPort": 4000,
