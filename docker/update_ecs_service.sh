@@ -12,7 +12,7 @@ for service in $(echo "$services_json" | jq -c '.[]'); do
 
     # Update task definition with the new image
     new_task_definition_arn=$(aws ecs register-task-definition \
-        --cli-input-json file://$GITHUB_WORKSPACE/$task_definition \
+        --cli-input-json file://$task_definition \
         --container-definitions "$(jq --arg container_name "$container_name" --arg image "$image" '.containerDefinitions[] | if .name == $container_name then .image = $image else . end' $task_definition)" \
         --query 'taskDefinition.taskDefinitionArn' \
         --output text)
