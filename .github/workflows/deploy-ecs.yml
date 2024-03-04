@@ -76,6 +76,7 @@ jobs:
 
       - name: Update task definition and deploy ECS service
         run: |
+          set -euxo pipefail
           services_json="${{ steps.parse-json.outputs.services }}"
           for service in $(echo "$services_json" | jq -c '.[]'); do
             task_definition=$(echo "$service" | jq -r '.task_definition')
