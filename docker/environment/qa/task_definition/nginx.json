@@ -2,7 +2,7 @@
     "family": "Nginx",
     "taskRoleArn": "",
     "executionRoleArn": "",
-    "networkMode": "",
+    "networkMode": "awsvpc",
     "containerDefinitions": [
         {
             "name": "nginx",
