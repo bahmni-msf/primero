@@ -18,5 +18,5 @@ UserGroup.create_or_update!(
   unique_id: 'usergroup-primero-cp-families',
   name: 'Primero CP with Families',
   description: 'Default user group for CP users with Families',
-  agency_unique_ids: ['UNICEF']
+  agency_unique_ids: ['MSF']
 )
