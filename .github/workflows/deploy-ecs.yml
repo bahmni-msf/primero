@@ -1,4 +1,4 @@
-# .github/workflows/deploy-ecs.yml
+# .github/workflows/deploy-ecs-qa.yml
 
 name: Deploy to ECS
 
@@ -6,56 +6,96 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to (e.g., qa, staging, production)'
+        description: 'Environment to deploy to (Example: qa, staging, production)'
         required: true
+        default: 'qa'
       branch:
         description: 'Branch to deploy from (default: ecs-github-workflow)'
-        required: false
-        default: 'ecs-github-workflow'
-  workflow_call:
-    inputs:
-      environment:
-        description: 'Environment to deploy to (e.g., qa, staging, production)'
         required: true
-      branch:
-        description: 'Branch to deploy from (default: ecs-github-workflow)'
-        required: false
         default: 'ecs-github-workflow'
+      services-json:
+        description: 'Which service or services to deploy in ecs'
+        required: true
+        default: '[{ "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "adsadads:87899" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "sfdsfds:678" }]'
+      cluster:
+        description: 'Which Cluster to deploy'
+        required: true
+        default: 'false'
+
+
+# env:
+#   ENVIRONMENT: ${{ github.event.inputs.environment }}
+
 
 jobs:
 
-  deploy-qa:
-    name: Deploy to ECS (Staging)
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'qa'
+
+    env:
+      ECS_CLUSTER: ${{ github.event.inputs.cluster }}
+      SERVICES: ${{ github.event.inputs.services-json }}
+      BRANCH: ${{ github.event.inputs.branch }}
 
     steps:
-      - name: Checkout
+      - name: Pull Github code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the qa environment
 
-  deploy-staging:
-    name: Deploy to ECS (Production)
-    runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'staging'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the staging environment
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-  deploy-production:
-    name: Deploy to ECS (Production)
-    runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'production'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the production environment
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'production' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.PROD_AWS_REGION }}
+
+      - name: Parse JSON input
+        id: parse-json
+        run: |
+          services_json=${{ env.SERVICES }}
+          echo "Parsed JSON: $services_json"
+          echo "::set-output name=services::$services_json"
+
+      - name: Update task definition and deploy ECS service
+        run: |
+          services_json="${{ steps.parse-json.outputs.services }}"
+          for service in $(echo "$services_json" | jq -c '.[]'); do
+            task_definition=$(echo "$service" | jq -r '.task_definition')
+            container_name=$(echo "$service" | jq -r '.container_name')
+            image=$(echo "$service" | jq -r '.image')
+            service_name=$(echo "$service" | jq -r '.service_name')
+
+            # Update task definition with the new image
+            new_task_definition_arn=$(aws ecs register-task-definition \
+              --cli-input-json file://$task_definition \
+              --container-definitions "$(jq --arg container_name "$container_name" --arg image "$image" '.containerDefinitions[] | if .name == $container_name then .image = $image else . end' $task_definition)" \
+              --query 'taskDefinition.taskDefinitionArn' \
+              --output text)
+
+            # Update ECS service with the new task definition
+            aws ecs update-service \
+              --cluster ${{ env.ECS_CLUSTER }} \
+              --service $service_name \
+              --task-definition $new_task_definition_arn
+          done
+        continue-on-error: false
+

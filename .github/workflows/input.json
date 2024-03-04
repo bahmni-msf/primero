@@ -1,0 +1,14 @@
+[
+  {
+    "service_name": "application",
+    "task_definition": "docker/environment/qa/task_definition/application.json",
+    "container_name": "application",
+    "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf/primero:1.0.0-41"
+  },
+  {
+    "service_name": "nginx",
+    "task_definition": "docker/environment/qa/task_definition/nginx.json",
+    "container_name": "nginx",
+    "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/potm/nginx:latest"
+  }
+]
