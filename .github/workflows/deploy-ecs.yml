@@ -67,35 +67,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.PROD_AWS_REGION }}
 
-      - name: Parse JSON input
-        id: parse-json
-        run: |
-          services_json=$SERVICES
-          echo "Parsed JSON: $services_json"
-          echo "::set-output name=services::$services_json"
+      # - name: Parse JSON input
+      #   id: parse-json
+      #   run: |
+      #     services_json=$SERVICES
+      #     echo "Parsed JSON: $services_json"
+      #     echo "::set-output name=services::$services_json"
+
+      - name: Print current directory
+        run: pwd
 
       - name: Update task definition and deploy ECS service
         run: |
-          set -e
-          services_json="${{ steps.parse-json.outputs.services }}"
-          for service in $(echo "$services_json" | jq -c '.[]'); do
-            task_definition=$(echo "$service" | jq -r '.task_definition')
-            container_name=$(echo "$service" | jq -r '.container_name')
-            image=$(echo "$service" | jq -r '.image')
-            service_name=$(echo "$service" | jq -r '.service_name')
-
-            # Update task definition with the new image
-            new_task_definition_arn=$(aws ecs register-task-definition \
-              --cli-input-json file://$task_definition \
-              --container-definitions "$(jq --arg container_name "$container_name" --arg image "$image" '.containerDefinitions[] | if .name == $container_name then .image = $image else . end' $task_definition)" \
-              --query 'taskDefinition.taskDefinitionArn' \
-              --output text)
-
-            # Update ECS service with the new task definition
-            aws ecs update-service \
-              --cluster $ECS_CLUSTER \
-              --service $service_name \
-              --task-definition $new_task_definition_arn
-          done
+          chmod +x update_ecs_service.sh
+          ./update_ecs_service.sh
         continue-on-error: false
 
