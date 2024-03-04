@@ -16,15 +16,11 @@ on:
       services-json:
         description: 'Which service or services to deploy in ecs'
         required: true
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf/primero:1.0.0-41" }, { "service_name": "Nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/potm/nginx:latest" } ]'
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
       cluster:
         description: 'Which Cluster to deploy'
         required: true
         default: 'POTMDev'
-
-
-# env:
-#   ENVIRONMENT: ${{ github.event.inputs.environment }}
 
 
 jobs:
@@ -66,16 +62,6 @@ jobs:
           aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.PROD_AWS_REGION }}
-
-      # - name: Parse JSON input
-      #   id: parse-json
-      #   run: |
-      #     services_json=$SERVICES
-      #     echo "Parsed JSON: $services_json"
-      #     echo "::set-output name=services::$services_json"
-
-      - name: Print current directory
-        run: pwd
 
       - name: Update task definition and deploy ECS service
         run: |
