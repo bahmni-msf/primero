@@ -16,7 +16,7 @@ on:
       services-json:
         description: 'Which service or services to deploy in ecs'
         required: true
-        default: '[{ "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "adsadads:87899" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "sfdsfds:678" }]'
+        default: '[ { "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf/primero:1.0.0-41" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "485402728093.dkr.ecr.ap-south-1.amazonaws.com/potm/nginx:latest" } ]'
       cluster:
         description: 'Which Cluster to deploy'
         required: true
@@ -79,7 +79,6 @@ jobs:
 
       - name: Update task definition and deploy ECS service
         run: |
-          print $GITHUB_WORKSPACE
           chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
           $GITHUB_WORKSPACE/docker/update_ecs_service.sh
         continue-on-error: false
