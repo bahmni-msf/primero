@@ -72,11 +72,11 @@ jobs:
         run: |
           services_json=$SERVICES
           echo "Parsed JSON: $services_json"
-          echo "{services}={$services_json}" >> $GITHUB_OUTPUT
+          echo "::set-output name=services::$services_json"
 
       - name: Update task definition and deploy ECS service
         run: |
-          set -euxo pipefail
+          set -e
           services_json="${{ steps.parse-json.outputs.services }}"
           for service in $(echo "$services_json" | jq -c '.[]'); do
             task_definition=$(echo "$service" | jq -r '.task_definition')
