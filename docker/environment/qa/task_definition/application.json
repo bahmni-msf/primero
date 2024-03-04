@@ -21,16 +21,6 @@
             "environment": [],
             "mountPoints": [],
             "volumesFrom": [],
-            "linuxParameters": {
-                "capabilities": {
-                    "add": [],
-                    "drop": []
-                },
-                "devices": [],
-                "initProcessEnabled": true,
-                "sharedMemorySize": 0,
-                "tmpfs": []
-            },
             "secrets": [],
             "dependsOn": []
         }
