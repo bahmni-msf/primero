@@ -70,7 +70,7 @@ jobs:
       - name: Parse JSON input
         id: parse-json
         run: |
-          services_json=${{ env.SERVICES }}
+          services_json=$SERVICES
           echo "Parsed JSON: $services_json"
           echo "::set-output name=services::$services_json"
 
@@ -92,7 +92,7 @@ jobs:
 
             # Update ECS service with the new task definition
             aws ecs update-service \
-              --cluster ${{ env.ECS_CLUSTER }} \
+              --cluster $ECS_CLUSTER \
               --service $service_name \
               --task-definition $new_task_definition_arn
           done
