@@ -79,7 +79,8 @@ jobs:
 
       - name: Update task definition and deploy ECS service
         run: |
-          chmod +x update_ecs_service.sh
-          ./update_ecs_service.sh
+          print $GITHUB_WORKSPACE
+          chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+          $GITHUB_WORKSPACE/docker/update_ecs_service.sh
         continue-on-error: false
 
