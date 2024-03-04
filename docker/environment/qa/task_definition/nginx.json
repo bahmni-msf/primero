@@ -12,8 +12,8 @@
             "memoryReservation": 0,
             "portMappings": [
                 {
-                    "containerPort": 0,
-                    "hostPort": 0,
+                    "containerPort": 80,
+                    "hostPort": 80,
                     "protocol": "tcp"
                 }
             ],
