@@ -20,7 +20,7 @@ on:
       cluster:
         description: 'Which Cluster to deploy'
         required: true
-        default: 'false'
+        default: 'POTMDev'
 
 
 # env:
@@ -30,7 +30,6 @@ on:
 jobs:
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
 
     env:
