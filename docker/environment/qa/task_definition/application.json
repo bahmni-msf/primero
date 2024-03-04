@@ -10,9 +10,11 @@
             "cpu": 0,
             "portMappings": [
                 {
-                    "containerPort": 4000,
-                    "hostPort": 4000,
-                    "protocol": "tcp"
+                    "name": "application-3000-tcp",
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
                 }
             ],
             "essential": true,
