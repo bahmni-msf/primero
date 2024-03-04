@@ -422,7 +422,8 @@ class Filter < ValueObject
       filters << CURRENT_LOCATION if user.module?(PrimeroModule::POTM)
       filters << AGENCY_OFFICE if user.module?(PrimeroModule::GBV)
       filters << USER_GROUP if user.module?(PrimeroModule::GBV) && user.user_group_filter?
-      filters += reporting_location_filters(user)
+      # As we don't need District filter
+      # filters += reporting_location_filters(user)
       filters
     end
 
