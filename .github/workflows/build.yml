@@ -34,7 +34,7 @@ jobs:
   docker-build-publish:
     name: Docker Build & Publish
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.deploy == 'true' }}
+    if: ${{ github.event.inputs.build == 'true' }}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
