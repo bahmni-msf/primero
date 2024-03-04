@@ -40,7 +40,7 @@
     "volumes": [],
     "placementConstraints": [],
     "requiresCompatibilities": [],
-    "cpu": "",
-    "memory": "",
+    "cpu": "512",
+    "memory": "1024",
     "tags": []
 }
