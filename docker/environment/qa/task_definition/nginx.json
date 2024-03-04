@@ -1,0 +1,46 @@
+{
+    "family": "",
+    "taskRoleArn": "",
+    "executionRoleArn": "",
+    "networkMode": "",
+    "containerDefinitions": [
+        {
+            "name": "nginx",
+            "image": "",
+            "cpu": 0,
+            "memory": 0,
+            "memoryReservation": 0,
+            "portMappings": [
+                {
+                    "containerPort": 0,
+                    "hostPort": 0,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "entryPoint": [],
+            "command": [],
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "linuxParameters": {
+                "capabilities": {
+                    "add": [],
+                    "drop": []
+                },
+                "devices": [],
+                "initProcessEnabled": true,
+                "sharedMemorySize": 0,
+                "tmpfs": []
+            },
+            "secrets": [],
+            "dependsOn": []
+        }
+    ],
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [],
+    "cpu": "",
+    "memory": "",
+    "tags": []
+}
