@@ -30,5 +30,10 @@
     "requiresCompatibilities": [],
     "cpu": "512",
     "memory": "1024",
-    "tags": []
+    "tags": [
+        {
+            "key": "service",
+            "value": "nginx"
+        }
+    ]
 }
