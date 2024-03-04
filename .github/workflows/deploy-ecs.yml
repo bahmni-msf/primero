@@ -72,7 +72,7 @@ jobs:
         run: |
           services_json=$SERVICES
           echo "Parsed JSON: $services_json"
-          echo "{services}={$(echo '${{ env.SERVICES }}' | jq -c '.')}" >> $GITHUB_OUTPUT
+          echo "{services}={$services_json}" >> $GITHUB_OUTPUT
 
       - name: Update task definition and deploy ECS service
         run: |
