@@ -27,39 +27,13 @@
                     "type": "s3"
                 }
             ],
-            "mountPoints": [
-                {
-                    "sourceVolume": "public",
-                    "containerPath": "/share/public",
-                    "readOnly": false
-                },
-                {
-                    "sourceVolume": "storage",
-                    "containerPath": "/srv/primero/application/storage",
-                    "readOnly": false
-                }
-            ],
+            "mountPoints": [],
             "volumesFrom": [],
             "secrets": [],
             "dependsOn": []
         }
     ],
-    "volumes": [
-        {
-            "name": "public",
-            "efsVolumeConfiguration": {
-                "fileSystemId": "",
-                "rootDirectory": "public"
-            }
-        },
-        {
-            "name": "storage",
-            "efsVolumeConfiguration": {
-                "fileSystemId": "",
-                "rootDirectory": "storage"
-            }
-        }
-    ],
+    "volumes": [],
     "placementConstraints": [],
     "requiresCompatibilities": [],
     "cpu": "512",
