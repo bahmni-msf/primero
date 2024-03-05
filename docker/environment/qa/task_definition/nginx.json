@@ -26,6 +26,12 @@
             "entryPoint": [],
             "command": [],
             "environment": [],
+            "environmentFiles": [
+                {
+                    "value": "arn:aws:s3:::{{BUCKET_NAME}}/nginx.env",
+                    "type": "s3"
+                }
+            ],
             "mountPoints": [],
             "volumesFrom": [],
             "secrets": [],

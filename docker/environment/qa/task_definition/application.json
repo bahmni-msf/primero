@@ -21,6 +21,12 @@
             "entryPoint": [],
             "command": [],
             "environment": [],
+            "environmentFiles": [
+                {
+                    "value": "arn:aws:s3:::{{BUCKET_NAME}}/application.env",
+                    "type": "s3"
+                }
+            ],
             "mountPoints": [],
             "volumesFrom": [],
             "secrets": [],
