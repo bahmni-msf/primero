@@ -1,7 +1,7 @@
 {
     "family": "Nginx",
-    "taskRoleArn": "",
-    "executionRoleArn": "",
+    "taskRoleArn": "${{ secrets.Role_ARN }}",
+    "executionRoleArn": "${{ secrets.Role_ARN }}",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
@@ -26,17 +26,47 @@
             "entryPoint": [],
             "command": [],
             "environment": [],
-            "mountPoints": [],
+            "environmentFiles": [
+                {
+                    "value": "arn:aws:s3:::${{ secrets.ENV_BUCKET }}/nginx.env",
+                    "type": "s3"
+                }
+            ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "public",
+                    "containerPath": "/srv/primero/application/public",
+                    "readOnly": false
+                }
+            ],
             "volumesFrom": [],
             "secrets": [],
             "dependsOn": []
         }
     ],
-    "volumes": [],
+    "volumes": [
+        {
+            "name": "public",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "${{ secrets.FS_ID }}",
+                "rootDirectory": "public"
+            }
+        }
+    ],
     "placementConstraints": [],
-    "requiresCompatibilities": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
     "cpu": "512",
     "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
     "tags": [
         {
             "key": "service",

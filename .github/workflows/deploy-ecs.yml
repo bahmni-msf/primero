@@ -16,7 +16,7 @@ on:
       services-json:
         description: 'Which service or services to deploy in ecs'
         required: true
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
       cluster:
         description: 'Which Cluster to deploy'
         required: true
@@ -25,13 +25,16 @@ on:
 
 jobs:
 
-  deploy:
+  deploy_qa:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'qa' }}
+    environment: QA
 
     env:
       ECS_CLUSTER: ${{ github.event.inputs.cluster }}
       SERVICES: ${{ github.event.inputs.services-json }}
       BRANCH: ${{ github.event.inputs.branch }}
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Pull Github code
@@ -40,28 +43,11 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
 
       - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'qa' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'staging' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'production' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.PROD_AWS_REGION }}
+          aws-access-key-id: ${{ secrets.QA_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.QA_AWS_REGION }}
 
       - name: Update task definition and deploy ECS service
         run: |
