@@ -91,6 +91,7 @@ jobs:
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
           $GITHUB_WORKSPACE/docker/build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}"
+          docker ps
 
       - name: Upload Image Names as Artifact
         if: always()
