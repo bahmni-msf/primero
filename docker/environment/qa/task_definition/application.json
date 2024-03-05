@@ -1,7 +1,7 @@
 {
     "family": "Application",
-    "taskRoleArn": "",
-    "executionRoleArn": "",
+    "taskRoleArn": "{{ROLE_ARN}}",
+    "executionRoleArn": "{{ROLE_ARN}}",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
@@ -23,7 +23,7 @@
             "environment": [],
             "environmentFiles": [
                 {
-                    "value": "arn:aws:s3:::$ENV_BUCKET/application.env",
+                    "value": "arn:aws:s3:::{{BUCKET_NAME}}/application.env",
                     "type": "s3"
                 }
             ],
@@ -48,14 +48,14 @@
         {
             "name": "public",
             "efsVolumeConfiguration": {
-                "fileSystemId": "$FS_ID",
+                "fileSystemId": "{{FILESYSTEM_ID}}",
                 "rootDirectory": "public"
             }
         },
         {
             "name": "storage",
             "efsVolumeConfiguration": {
-                "fileSystemId": "$FS_ID",
+                "fileSystemId": "{{FILESYSTEM_ID}}",
                 "rootDirectory": "storage"
             }
         }

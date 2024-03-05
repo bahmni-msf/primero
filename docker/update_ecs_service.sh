@@ -5,6 +5,13 @@ set -euxo pipefail
 services_json="${SERVICES}"
 
 echo "Role_ARN: $Role_ARN"
+echo "ENV_BUCKET: $ENV_BUCKET"
+echo "FS_ID: $FS_ID"
+
+# Replace placeholder in JSON file with actual bucket name
+sed -i "s/{{BUCKET_NAME}}/$ENV_BUCKET/g" "$GITHUB_WORKSPACE/$task_definition"
+sed -i "s/{{ROLE_ARN}}/$Role_ARN/g" "$GITHUB_WORKSPACE/$task_definition"
+sed -i "s/{{FILESYSTEM_ID}}/$FS_ID/g" "$GITHUB_WORKSPACE/$task_definition"
 
 for service in $(echo "$services_json" | jq -c '.[]'); do
     task_definition=$(echo "$service" | jq -r '.task_definition')
