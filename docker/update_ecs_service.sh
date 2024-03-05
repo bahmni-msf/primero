@@ -4,6 +4,8 @@ set -euxo pipefail
 
 services_json="${SERVICES}"
 
+echo "Role_ARN: $Role_ARN"
+
 for service in $(echo "$services_json" | jq -c '.[]'); do
     task_definition=$(echo "$service" | jq -r '.task_definition')
     container_name=$(echo "$service" | jq -r '.container_name')
