@@ -1,7 +1,7 @@
 {
     "family": "Nginx",
-    "taskRoleArn": "${{ secrets.Role_ARN }}",
-    "executionRoleArn": "${{ secrets.Role_ARN }}",
+    "taskRoleArn": "$Role_ARN",
+    "executionRoleArn": "$Role_ARN",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
@@ -28,7 +28,7 @@
             "environment": [],
             "environmentFiles": [
                 {
-                    "value": "arn:aws:s3:::${{ secrets.ENV_BUCKET }}/nginx.env",
+                    "value": "arn:aws:s3:::$ENV_BUCKET/nginx.env",
                     "type": "s3"
                 }
             ],
@@ -48,7 +48,7 @@
         {
             "name": "public",
             "efsVolumeConfiguration": {
-                "fileSystemId": "${{ secrets.FS_ID }}",
+                "fileSystemId": "$FS_ID",
                 "rootDirectory": "public"
             }
         }
