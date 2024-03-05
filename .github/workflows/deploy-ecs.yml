@@ -1,4 +1,4 @@
-# .github/workflows/deploy-ecs.yml
+# .github/workflows/deploy-ecs-qa.yml
 
 name: Deploy to ECS
 
@@ -6,56 +6,66 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to (e.g., qa, staging, production)'
+        description: 'Environment to deploy to (Example: qa, staging, production)'
         required: true
+        default: 'qa'
       branch:
         description: 'Branch to deploy from (default: ecs-github-workflow)'
-        required: false
-        default: 'ecs-github-workflow'
-  workflow_call:
-    inputs:
-      environment:
-        description: 'Environment to deploy to (e.g., qa, staging, production)'
         required: true
-      branch:
-        description: 'Branch to deploy from (default: ecs-github-workflow)'
-        required: false
         default: 'ecs-github-workflow'
+      services-json:
+        description: 'Which service or services to deploy in ecs'
+        required: true
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+      cluster:
+        description: 'Which Cluster to deploy'
+        required: true
+        default: 'POTMDev'
+
 
 jobs:
 
-  deploy-qa:
-    name: Deploy to ECS (Staging)
+  deploy:
     runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'qa'
+
+    env:
+      ECS_CLUSTER: ${{ github.event.inputs.cluster }}
+      SERVICES: ${{ github.event.inputs.services-json }}
+      BRANCH: ${{ github.event.inputs.branch }}
 
     steps:
-      - name: Checkout
+      - name: Pull Github code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the qa environment
 
-  deploy-staging:
-    name: Deploy to ECS (Production)
-    runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'staging'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'qa' }}
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the staging environment
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-  deploy-production:
-    name: Deploy to ECS (Production)
-    runs-on: ubuntu-latest
-    if: github.event.inputs.environment == 'production'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'staging' }}
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          ref: ${{ github.event.inputs.branch }}
-      # Add steps for deploying to the production environment
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure AWS Credentials
+        if: ${{ github.event.inputs.environment == 'production' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.PROD_AWS_REGION }}
+
+      - name: Update task definition and deploy ECS service
+        run: |
+          chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+          $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+        continue-on-error: false
+

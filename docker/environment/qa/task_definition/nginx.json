@@ -1,0 +1,46 @@
+{
+    "family": "Nginx",
+    "taskRoleArn": "",
+    "executionRoleArn": "",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "nginx",
+            "image": "",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "nginx-80-tcp",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
+                },
+                {
+                    "name": "nginx-443-tcp",
+                    "containerPort": 443,
+                    "hostPort": 443,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "entryPoint": [],
+            "command": [],
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [],
+            "dependsOn": []
+        }
+    ],
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [],
+    "cpu": "512",
+    "memory": "1024",
+    "tags": [
+        {
+            "key": "service",
+            "value": "nginx"
+        }
+    ]
+}
