@@ -74,16 +74,23 @@ jobs:
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
+#      - name: Build and Push Docker Image to ECR
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#          IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
+#        run: |
+#          IFS=',' read -ra IMAGE_ARRAY <<< "${IMAGE_NAMES}"
+#          for IMAGE in "${IMAGE_ARRAY[@]}"; do
+#            export IMAGE_NAME=$IMAGE
+#            /docker/build.sh $IMAGE_NAME -t $IMAGE_TAG -r $ECR_REGISTRY
+#          done
+
       - name: Build and Push Docker Image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          IFS=',' read -ra IMAGE_ARRAY <<< "${IMAGE_NAMES}"
-          for IMAGE in "${IMAGE_ARRAY[@]}"; do
-            export IMAGE_NAME=$IMAGE
-            /docker/build.sh $IMAGE_NAME -t $IMAGE_TAG -r $ECR_REGISTRY
-          done
+          /docker/build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}"
 
       - name: Upload Image Names as Artifact
         if: always()
