@@ -1,7 +1,7 @@
 {
     "family": "Application",
-    "taskRoleArn": "$Role_ARN",
-    "executionRoleArn": "$Role_ARN",
+    "taskRoleArn": "",
+    "executionRoleArn": "",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
