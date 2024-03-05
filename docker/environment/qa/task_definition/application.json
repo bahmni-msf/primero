@@ -21,12 +21,6 @@
             "entryPoint": [],
             "command": [],
             "environment": [],
-            "environmentFiles": [
-                {
-                    "value": "arn:aws:s3:::{{BUCKET_NAME}}/application.env",
-                    "type": "s3"
-                }
-            ],
             "mountPoints": [],
             "volumesFrom": [],
             "secrets": [],
@@ -38,10 +32,6 @@
     "requiresCompatibilities": [],
     "cpu": "512",
     "memory": "1024",
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    },
     "tags": [
         {
             "key": "service",
