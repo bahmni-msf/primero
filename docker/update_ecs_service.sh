@@ -15,11 +15,7 @@ for service in $(echo "$services_json" | jq -c '.[]'); do
     service_name=$(echo "$service" | jq -r '.service_name')
 
     # Replace placeholder in JSON file with actual bucket name
-    # sed -i "s/{{BUCKET_NAME}}/$ENV_BUCKET/g" "$GITHUB_WORKSPACE/$task_definition"
-    # sed -i "s/{{BUCKET_NAME}}/$ENV_BUCKET/g; s/{{ROLE_ARN}}/$Role_ARN/g; s/{{FILESYSTEM_ID}}/$FS_ID/g" "$GITHUB_WORKSPACE/$task_definition"
     sed -i "s#{{BUCKET_NAME}}#$ENV_BUCKET#g; s#{{ROLE_ARN}}#$Role_ARN#g; s#{{FILESYSTEM_ID}}#$FS_ID#g" "$GITHUB_WORKSPACE/$task_definition"
-    # sed -i "s/{{ROLE_ARN}}/$Role_ARN/g" "$GITHUB_WORKSPACE/$task_definition"
-    # sed -i "s/{{FILESYSTEM_ID}}/$FS_ID/g" "$GITHUB_WORKSPACE/$task_definition"
 
     # Update task definition with the new image
     new_task_definition_arn=$(aws ecs register-task-definition \
