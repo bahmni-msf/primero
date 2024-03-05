@@ -54,13 +54,7 @@
         }
     ],
     "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
-    ],
-    "requiresCompatibilities": [
-        "EC2"
-    ],
+    "requiresCompatibilities": [],
     "cpu": "512",
     "memory": "1024",
     "runtimePlatform": {
