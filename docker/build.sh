@@ -6,7 +6,7 @@ set -euxo pipefail
 # Grab the variables set in the defaults
 # These must be passed in explicitly with --build-arg
 # and the defined again as an
-source ./defaults.env
+source /docker/defaults.env
 test -e ./local.env && source ./local.env
 
 USAGE="Usage ./build application|migration|nginx|solr|all [-t <tag>] [-r <repository>] [-b <registry>] [-l]"
