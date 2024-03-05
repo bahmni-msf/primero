@@ -1,7 +1,7 @@
 {
     "family": "Application",
-    "taskRoleArn": "{{ROLE_ARN}}",
-    "executionRoleArn": "{{ROLE_ARN}}",
+    "taskRoleArn": "",
+    "executionRoleArn": "",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
@@ -48,14 +48,14 @@
         {
             "name": "public",
             "efsVolumeConfiguration": {
-                "fileSystemId": "{{FILESYSTEM_ID}}",
+                "fileSystemId": "",
                 "rootDirectory": "public"
             }
         },
         {
             "name": "storage",
             "efsVolumeConfiguration": {
-                "fileSystemId": "{{FILESYSTEM_ID}}",
+                "fileSystemId": "",
                 "rootDirectory": "storage"
             }
         }
