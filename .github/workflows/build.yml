@@ -82,7 +82,7 @@ jobs:
           IFS=',' read -ra IMAGE_ARRAY <<< "${IMAGE_NAMES}"
           for IMAGE in "${IMAGE_ARRAY[@]}"; do
             export IMAGE_NAME=$IMAGE
-            ./build.sh $IMAGE_NAME -t $IMAGE_TAG -r $ECR_REGISTRY
+            /docker/build.sh $IMAGE_NAME -t $IMAGE_TAG -r $ECR_REGISTRY
           done
 
       - name: Upload Image Names as Artifact
