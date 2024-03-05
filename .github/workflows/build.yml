@@ -90,7 +90,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          /docker/build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}"
+          $GITHUB_WORKSPACE/docker/build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}"
 
       - name: Upload Image Names as Artifact
         if: always()
