@@ -1,7 +1,7 @@
 {
     "family": "Application",
-    "taskRoleArn": "",
-    "executionRoleArn": "",
+    "taskRoleArn": "{{ROLE_ARN}}",
+    "executionRoleArn": "{{ROLE_ARN}}",
     "networkMode": "awsvpc",
     "containerDefinitions": [
         {
@@ -27,17 +27,47 @@
                     "type": "s3"
                 }
             ],
-            "mountPoints": [],
+            "mountPoints": [
+                {
+                    "sourceVolume": "public",
+                    "containerPath": "/share/public",
+                    "readOnly": false
+                },
+                {
+                    "sourceVolume": "storage",
+                    "containerPath": "/srv/primero/application/storage",
+                    "readOnly": false
+                }
+            ],
             "volumesFrom": [],
             "secrets": [],
             "dependsOn": []
         }
     ],
-    "volumes": [],
+    "volumes": [
+        {
+            "name": "public",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "{{FILESYSTEM_ID}}",
+                "rootDirectory": "public"
+            }
+        },
+        {
+            "name": "storage",
+            "efsVolumeConfiguration": {
+                "fileSystemId": "{{FILESYSTEM_ID}}",
+                "rootDirectory": "storage"
+            }
+        }
+    ],
     "placementConstraints": [],
     "requiresCompatibilities": [],
     "cpu": "512",
     "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
     "tags": [
         {
             "key": "service",
