@@ -92,7 +92,7 @@ jobs:
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
           cd docker \
-          build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}"
+          build.sh "${IMAGE_NAMES}" "${ECR_REGISTRY}" "${IMAGE_TAG}" \
           docker ps
 
       - name: Upload Image Names as Artifact
