@@ -50,6 +50,7 @@ jobs:
       - name: pwd
         run: |
           pwd
+          ls -la
           echo $GITHUB_WORKSPACE
 
       # - name: Update task definition and deploy ECS service
