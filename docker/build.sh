@@ -46,9 +46,9 @@ repository=${r:-"uniprimeroxacrdev.azurecr.io"}
 with_latest=${l:-false}
 build_registry=${b:-""}
 
-BUILD_NGINX="docker build -f $GITHUB_WORKSPACE/docker/nginx/Dockerfile . -t bahmni-msf-primero/nginx:${tag} -t ${repository}/bahmni-msf-primero/nginx:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
-BUILD_SOLR="docker build -f $GITHUB_WORKSPACE/docker/solr/Dockerfile ../ -t bahmni-msf-primero/solr:${tag} -t ${repository}/bahmni-msf-primero/solr:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
-BUILD_APP="docker build -f $GITHUB_WORKSPACE/docker/application/Dockerfile ../ -t bahmni-msf/primero:${tag} -t ${repository}/bahmni-msf/primero:${tag} --build-arg APP_ROOT=${APP_ROOT} --build-arg RAILS_LOG_PATH=${RAILS_LOG_PATH} --build-arg APP_UID=${APP_UID} --build-arg APP_GID=${APP_GID} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_NGINX="docker build -f ./docker/nginx/Dockerfile . -t bahmni-msf-primero/nginx:${tag} -t ${repository}/bahmni-msf-primero/nginx:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_SOLR="docker build -f ./docker/solr/Dockerfile . -t bahmni-msf-primero/solr:${tag} -t ${repository}/bahmni-msf-primero/solr:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_APP="docker build -f ./docker/application/Dockerfile . -t bahmni-msf/primero:${tag} -t ${repository}/bahmni-msf/primero:${tag} --build-arg APP_ROOT=${APP_ROOT} --build-arg RAILS_LOG_PATH=${RAILS_LOG_PATH} --build-arg APP_UID=${APP_UID} --build-arg APP_GID=${APP_GID} --build-arg BUILD_REGISTRY=${build_registry}"
 #BUILD_MIGRATION="docker build -f migration/Dockerfile ../ -t primero/migration:${tag} -t ${repository}/primero/migration:${tag} --build-arg BUILD_REGISTRY=${build_registry} --build-arg PRIMERO_VERSION=${tag}"
 
 apply_tags_and_push () {
