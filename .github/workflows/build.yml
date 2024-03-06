@@ -1,6 +1,5 @@
-# .github/workflows/deploy-ecs-qa.yml
 
-name: Deploy to ECS (QA)
+name: Build And Publish Image
 
 on:
   workflow_dispatch:
