@@ -70,8 +70,10 @@ jobs:
 
       - name: Set Image tag variable
         run: |
+          pwd
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          echo $GITHUB_WORKSPACE
 
 #      - name: Build and Push Docker Image to ECR
 #        env:
