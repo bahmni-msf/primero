@@ -125,7 +125,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.branch }}
-          
+
       - name: Download Image Names Artifact
         uses: actions/download-artifact@v2
         with:
@@ -136,7 +136,8 @@ jobs:
         id: read-image-names
         run: |
           IMAGE_NAMES=$(cat /tmp/image-names.txt)
-          echo "{IMAGE_NAMES}={$IMAGE_NAMES}" >> $GITHUB_OUTPUT
+          echo "$IMAGE_NAMES=${IMAGE_NAMES}" >> $GITHUB_OUTPUT
+
 
       - name: Trigger Deploy Workflow
         uses: ./.github/workflows/deploy-ecs.yml
