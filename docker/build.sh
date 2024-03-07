@@ -46,8 +46,8 @@ repository=${r:-"uniprimeroxacrdev.azurecr.io"}
 with_latest=${l:-false}
 build_registry=${b:-""}
 
-BUILD_NGINX="docker build -f ./docker/nginx/Dockerfile ./docker -t potm/nginx:${tag} -t ${repository}/bahmni-msf-primero/nginx:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
-#BUILD_SOLR="docker build -f ./docker/solr/Dockerfile . -t bahmni-msf-primero/solr:${tag} -t ${repository}/bahmni-msf-primero/solr:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_NGINX="docker build -f ./docker/nginx/Dockerfile . -t potm/nginx:${tag} -t ${repository}/bahmni-msf-primero/nginx:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_SOLR="docker build -f ./docker/solr/Dockerfile . -t potm/solr:${tag} -t ${repository}/bahmni-msf-primero/solr:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
 BUILD_APP="docker build -f ./docker/application/Dockerfile . -t potm/application:${tag} -t ${repository}/bahmni-msf/primero:${tag} --build-arg APP_ROOT=${APP_ROOT} --build-arg RAILS_LOG_PATH=${RAILS_LOG_PATH} --build-arg APP_UID=${APP_UID} --build-arg APP_GID=${APP_GID} --build-arg BUILD_REGISTRY=${build_registry}"
 #BUILD_MIGRATION="docker build -f migration/Dockerfile ../ -t primero/migration:${tag} -t ${repository}/primero/migration:${tag} --build-arg BUILD_REGISTRY=${build_registry} --build-arg PRIMERO_VERSION=${tag}"
 
@@ -78,9 +78,9 @@ case ${image} in
   nginx)
     eval "${BUILD_NGINX}" && apply_tags_and_push nginx
     ;;
-  # solr)
-  #   eval "${BUILD_SOLR}" && apply_tags_and_push solr
-  #   ;;
+  solr)
+    eval "${BUILD_SOLR}" && apply_tags_and_push solr
+    ;;
   application)
     eval "${BUILD_APP}" && apply_tags_and_push application
     ;;
@@ -91,7 +91,7 @@ case ${image} in
   all)
     eval "${BUILD_APP}" && apply_tags_and_push application
     # eval "${BUILD_MIGRATION}" && apply_tags_and_push migration
-    # eval "${BUILD_SOLR}" && apply_tags_and_push solr
+    eval "${BUILD_SOLR}" && apply_tags_and_push solr
     eval "${BUILD_NGINX}" && apply_tags_and_push nginx
     ;;
   *)
