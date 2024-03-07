@@ -14,7 +14,7 @@ for service in $(echo "$services_json" | jq -c '.[]'); do
     image=$(echo "$service" | jq -r '.image')
     service_name=$(echo "$service" | jq -r '.service_name')
 
-    # Replace placeholder in JSON file with actual bucket name
+    # Replace placeholder in JSON file with actual bucket name, role arn and FileSystem ID
     sed -i "s#{{BUCKET_NAME}}#$ENV_BUCKET#g; s#{{ROLE_ARN}}#$Role_ARN#g; s#{{FILESYSTEM_ID}}#$FS_ID#g" "$GITHUB_WORKSPACE/$task_definition"
 
     # Update task definition with the new image

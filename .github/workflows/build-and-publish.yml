@@ -15,7 +15,7 @@ on:
       build:
         description: 'Whether to build or not'
         required: false
-        default: 'false'
+        default: 'true'
       deploy:
         description: 'Whether to deploy or not'
         required: false
@@ -91,9 +91,24 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          ./docker/build.sh "${IMAGE_NAMES}" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}"
+          IMAGE_LIST=$(./docker/build.sh "${IMAGE_NAMES}" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
+          # Save the list of images to a file
+          echo "$IMAGE_LIST" > image-names.txt
 
-      - name: Upload Image Names as Artifact
+      - name: Save Image Names as Artifact
+        if: always()
+        run: |
+          # Ensure the file exists before attempting to save it as an artifact
+          if [ -f "image-names.txt" ]; then
+            cat image-names.txt
+          else
+            echo "Image names file not found."
+            exit 1
+          fi
+        working-directory: ${{ github.workspace }}
+
+      # Upload the file as an artifact
+      - name: Upload Image Names Artifact
         if: always()
         uses: actions/upload-artifact@v2
         with:
