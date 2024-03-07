@@ -117,6 +117,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: docker-build-publish
     if: ${{ github.event.inputs.deploy == 'true' }}
 
     steps:
@@ -133,24 +134,24 @@ jobs:
           echo "::set-output name=IMAGE_NAMES::$IMAGE_NAMES"
 
       - name: Trigger Deploy Workflow
-        uses: ./.github/workflows/deploy.yml
+        uses: ./.github/workflows/deploy-ecs.yml
         with:
           environment: ${{ github.event.inputs.environment }}
           branch: ${{ github.event.inputs.branch }}
 
 
-      - name: Deploy to Amazon ECS
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const response = await octokit.actions.createWorkflowDispatch({
-              owner: 'your-username',
-              repo: 'your-repository',
-              workflow_id: 'deploy.yml',
-              inputs: {
-                ecs-services: 'service1 service2', // Add your ECS services here
-                image-names: '{"service1": "image1", "service2": "image2"}', // Add your image names here
-                task-definitions: '{"service1": "task-def1.json", "service2": "task-def2.json"}' // Add your task definition files here
-              }
-            });
-            console.log(response);
+      # - name: Deploy to Amazon ECS
+      #   uses: actions/github-script@v4
+      #   with:
+      #     script: |
+      #       const response = await octokit.actions.createWorkflowDispatch({
+      #         owner: 'your-username',
+      #         repo: 'your-repository',
+      #         workflow_id: 'deploy.yml',
+      #         inputs: {
+      #           ecs-services: 'service1 service2', // Add your ECS services here
+      #           image-names: '{"service1": "image1", "service2": "image2"}', // Add your image names here
+      #           task-definitions: '{"service1": "task-def1.json", "service2": "task-def2.json"}' // Add your task definition files here
+      #         }
+      #       });
+      #       console.log(response);
