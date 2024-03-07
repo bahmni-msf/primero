@@ -85,7 +85,8 @@ export const AGE_MAX = 999;
 export const MODULES = Object.freeze({
   CP: "primeromodule-cp",
   GBV: "primeromodule-gbv",
-  MRM: "primeromodule-mrm"
+  MRM: "primeromodule-mrm",
+  POTM: "primeromodule-potm"
 });
 
 export const MODULE_TYPE_FIELD = "module_id";
