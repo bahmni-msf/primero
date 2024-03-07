@@ -903,6 +903,7 @@ Lookup.create_or_update!(
     { id: 'referrals_transfers', display_text: 'Referrals and Transfers' },
     { id: 'notes', display_text: 'Notes' },
     { id: 'documents', display_text: 'Documents' },
+    { id: 'test_Assessment_Form_Group', display_text: 'Assessment Test Group' },
     { id: 'other_reportable_fields', display_text: 'Other Reportable Fields' }
   ].map(&:with_indifferent_access)
 )
@@ -1046,4 +1047,67 @@ Lookup.create_or_update!(
     { id: 'through_specialized_center', display_text: 'Through Specialized Center' },
     { id: 'other', display_text: 'Other' }
   ].map(&:with_indifferent_access)
+)
+
+Lookup.create_or_update!(
+  unique_id: 'lookup-project_place',
+  name_en: 'Project coming from',
+  locked: true,
+  lookup_values_en: [
+    { id: 'beni_walid', display_text: 'Beni Walid' }.with_indifferent_access,
+    { id: 'misrata', display_text: 'Misrata' }.with_indifferent_access,
+    { id: 'tripoli', display_text: 'Tripoli' }.with_indifferent_access,
+  ]
+)
+
+Lookup.create_or_update!(
+  unique_id: 'lookup-family-of-care',
+  name_en: 'Family of Care',
+  locked: true,
+  lookup_values_en: [
+    { id: 'gyn/obs', display_text: 'Gyn/Obs' }.with_indifferent_access,
+    { id: 'infectious_diseases', display_text: 'Infectious diseases' }.with_indifferent_access,
+    { id: 'pediatrics', display_text: 'Pediatrics' }.with_indifferent_access,
+  ]
+)
+
+Lookup.create_or_update!(
+  unique_id: 'lookup-place-of-discharge',
+  name_en: 'Place of Discharge',
+  locked: true,
+  lookup_values_en: [
+    { id: 'beni_walid', display_text: 'Beni Walid' }.with_indifferent_access,
+    { id: 'misrata', display_text: 'Misrata' }.with_indifferent_access,
+  ]
+)
+
+Lookup.create_or_update!(
+  unique_id: 'lookup-beni-walid-place-of-discharge',
+  name_en: 'Beni Walid Place of Discharge',
+  locked: true,
+  lookup_values_en: [
+    { id: 'beni_walid_community', display_text: 'Beni Walid community' }.with_indifferent_access,
+    { id: 'other', display_text: 'Other' }.with_indifferent_access,
+  ]
+)
+Lookup.create_or_update!(
+  unique_id: 'lookup-misrata_place-of-discharge',
+  name_en: 'Misrata Place of Discharge',
+  locked: true,
+  lookup_values_en: [
+    { id: 'misrata_community', display_text: 'Misrata Community' }.with_indifferent_access,
+    { id: 'misrata_shelter', display_text: 'Misrata Shelter' }.with_indifferent_access,
+    { id: 'other', display_text: 'Other' }.with_indifferent_access,
+  ]
+)
+
+Lookup.create_or_update!(
+  unique_id: 'lookup-primary_diagnosis_in_protection',
+  name_en: 'Primary diagnosis in Protection',
+  locked: true,
+  lookup_values_en: [
+    { id: 'mental_disorder', display_text: 'Mental Disorder' }.with_indifferent_access,
+    { id: 'trauma', display_text: 'Trauma' }.with_indifferent_access,
+    { id: 'depression', display_text: 'Depression' }.with_indifferent_access,
+  ]
 )

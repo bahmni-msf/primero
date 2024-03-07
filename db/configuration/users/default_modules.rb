@@ -173,6 +173,8 @@ PrimeroModule.create_or_update!(
   form_sections: FormSection.where(
     unique_id: %w[
        assessment protection_concern_details
+       social_health_assessment test_Assessment_Form_Group mental_health_assessment accomodation_health_assessment
+
     ]
   ),
   field_map: {

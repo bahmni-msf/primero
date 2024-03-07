@@ -5,16 +5,16 @@
 photo_audio_fields = [
   Field.new({ 'name' => 'photos',
               'type' => 'photo_upload_box',
-              'editable' => false,
-              'disabled' => true,
+              'editable' => true,
+              'disabled' => false,
               'show_on_minify_form' => true,
               'display_name_en' => 'Photos',
               'help_text_en' => 'Only PNG, JPEG, and GIF files permitted' }),
   Field.new({ 'name' => 'recorded_audio',
               'type' => 'audio_upload_box',
               'show_on_minify_form' => true,
-              'editable' => false,
-              'disabled' => true,
+              'editable' => true,
+              'disabled' => false,
               'display_name_en' => 'Recorded Audio',
               'help_text_en' => 'Only MP3 and M4A files permitted' })
 ]
