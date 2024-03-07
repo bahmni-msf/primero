@@ -56,15 +56,15 @@ apply_tags_and_push () {
   local subtag=${2:-""}
   [[ -n "${subtag}" ]] && subtag="-${subtag}"
 
-  docker tag "potm/${image}:${tag}${subtag}" "${repository}/potm/${image}:${tag}${subtag}"
+  docker tag "potm/${image}:${tag}${subtag}" "${repository}/potm/${image}:${tag}${subtag}" > /dev/null
   if [[ "${with_latest}" == true ]] ; then
-    docker tag "potm/${image}:${tag}${subtag}" "potm/${image}:latest${subtag}"
-    docker tag "${repository}/potm/${image}:${tag}${subtag}" "${repository}/potm/${image}:latest${subtag}"
+    docker tag "potm/${image}:${tag}${subtag}" "potm/${image}:latest${subtag}" > /dev/null
+    docker tag "${repository}/potm/${image}:${tag}${subtag}" "${repository}/potm/${image}:latest${subtag}" > /dev/null
   fi
   # Push the tagged images to the repository
-  docker push "${repository}/potm/${image}:${tag}${subtag}"
+  docker push "${repository}/potm/${image}:${tag}${subtag}" > /dev/null
   if [[ "${with_latest}" == true ]] ; then
-    docker push "${repository}/potm/${image}:latest${subtag}"
+    docker push "${repository}/potm/${image}:latest${subtag}" > /dev/null
   fi
   # Output the image name
   echo "${repository}/potm/${image}:${tag}${subtag}"
