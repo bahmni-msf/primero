@@ -119,7 +119,6 @@ jobs:
       runs-on: ubuntu-latest
       needs: docker-build-publish
       if: ${{ github.event.inputs.deploy == 'true' }}
-      uses: ./.github/workflows/deploy-ecs.yml
       steps:
         - name: Pull Github code
           uses: actions/checkout@v3
