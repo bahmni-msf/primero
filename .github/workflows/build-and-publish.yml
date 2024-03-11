@@ -142,6 +142,7 @@ jobs:
         run: |
           pwd
           ls -la
+          cat .github/workflows/deploy-ecs.yml
 
       - name: Trigger Deploy Workflow
         uses: ./.github/workflows/deploy-ecs.yml
