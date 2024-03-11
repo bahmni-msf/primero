@@ -909,6 +909,14 @@ Lookup.create_or_update!(
 )
 
 Lookup.create_or_update!(
+  unique_id: 'lookup-form-group-potm-case',
+  name_en: 'Form Groups - POTM Case',
+  lookup_values_en: [
+    { id: 'test_Assessment_Form_Group', display_text: 'Assessment Test Group' }
+  ].map(&:with_indifferent_access)
+)
+
+Lookup.create_or_update!(
   unique_id: 'lookup-form-group-cp-tracing-request',
   name_en: 'Form Groups - CP Tracing Request',
   lookup_values_en: [
