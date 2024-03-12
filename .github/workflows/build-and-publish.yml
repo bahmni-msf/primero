@@ -128,11 +128,8 @@ jobs:
         uses: octokit/request-action@v2.x
         with:
           route: POST /repos/:owner/:repo/actions/workflows/{workflow_id}/dispatches
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
           workflow_id: deploy-ecs.yml
           ref: ${{ github.event.inputs.branch }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           inputs: |
             environment=${{ github.event.inputs.environment }}
             branch=${{ github.event.inputs.branch }}
