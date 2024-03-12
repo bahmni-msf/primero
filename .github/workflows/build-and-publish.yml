@@ -135,10 +135,22 @@ jobs:
           IMAGE_NAMES=$(cat /tmp/image-names.txt)
           echo "$IMAGE_NAMES=${IMAGE_NAMES}" >> $GITHUB_OUTPUT
       - name: Trigger Deploy Workflow
-        uses: ./.github/workflows/deploy-ecs.yml
+        uses: actions/github-script@v4
         with:
-          environment: ${{ github.event.inputs.environment }}
-          branch: ${{ github.event.inputs.branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await octokit.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'workflow_call',
+              client_payload: {
+                environment: '${{ github.event.inputs.environment }}',
+                branch: '${{ github.event.inputs.branch }}',
+                services-json: '${{ github.event.inputs.services-json }}',
+                cluster: '${{ github.event.inputs.cluster }}',
+                image-names: '${{ env.IMAGE_NAMES }}'  # Pass the image-names to the downstream workflow
+              }
+            });
 
 
       # - name: Deploy to Amazon ECS
