@@ -16,11 +16,12 @@ export const menuList = (i18n, disableCodeOfConduct) => [
     id: SUPPORT_FORMS.termsOfUse,
     text: i18n.t(`navigation.support_menu.${SUPPORT_FORMS.termsOfUse}`)
   },
-  {
-    id: SUPPORT_FORMS.codeOfConduct,
-    text: i18n.t(`navigation.support_menu.${SUPPORT_FORMS.codeOfConduct}`),
-    disabled: disableCodeOfConduct
-  },
+    //Code of conduct inside support menu
+  // {
+  //   id: SUPPORT_FORMS.codeOfConduct,
+  //   text: i18n.t(`navigation.support_menu.${SUPPORT_FORMS.codeOfConduct}`),
+  //   disabled: disableCodeOfConduct
+  // },
   {
     id: SUPPORT_FORMS.resync,
     text: i18n.t(`navigation.support_menu.${SUPPORT_FORMS.resync}`)

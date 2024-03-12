@@ -418,8 +418,8 @@ class Filter < ValueObject
       filters = []
       filters += approvals_filters(user)
       filters += field_based_filters(user)
-      filters << RISK_LEVEL if user.module?(PrimeroModule::CP)
-      filters << CURRENT_LOCATION if user.module?(PrimeroModule::CP)
+      filters << RISK_LEVEL if user.module?(PrimeroModule::CP) || user.module?(PrimeroModule::POTM)
+      filters << CURRENT_LOCATION if user.module?(PrimeroModule::CP) || user.module?(PrimeroModule::POTM)
       filters << AGENCY_OFFICE if user.module?(PrimeroModule::GBV)
       filters << USER_GROUP if user.module?(PrimeroModule::GBV) && user.user_group_filter?
       filters += reporting_location_filters(user)
