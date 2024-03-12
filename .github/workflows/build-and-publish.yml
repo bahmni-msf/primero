@@ -127,8 +127,10 @@ jobs:
       - name: Trigger Deploy Workflow
         uses: octokit/request-action@v2.x
         with:
-          route: POST /repos/:owner/:repo/actions/workflows/{workflow_id}/dispatches
-          workflow_id: deploy-ecs.yml
+          route: POST /repos/:owner/:repo/actions/workflows/dispatches
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          workflow_file: deploy-ecs.yml
           ref: ${{ github.event.inputs.branch }}
           inputs: |
             environment=${{ github.event.inputs.environment }}
