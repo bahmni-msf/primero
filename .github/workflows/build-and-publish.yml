@@ -73,16 +73,6 @@ jobs:
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           echo $GITHUB_WORKSPACE
-      #      - name: Build and Push Docker Image to ECR
-      #        env:
-      #          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #          IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
-      #        run: |
-      #          IFS=',' read -ra IMAGE_ARRAY <<< "${IMAGE_NAMES}"
-      #          for IMAGE in "${IMAGE_ARRAY[@]}"; do
-      #            export IMAGE_NAME=$IMAGE
-      #            /docker/build.sh $IMAGE_NAME -t $IMAGE_TAG -r $ECR_REGISTRY
-      #          done
 
       - name: Build and Push Docker Image to ECR
         env:
@@ -142,29 +132,12 @@ jobs:
             await octokit.repos.createDispatchEvent({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              event_type: 'workflow_call',
+              event_type: 'workflow_dispatch',
               client_payload: {
                 environment: '${{ github.event.inputs.environment }}',
                 branch: '${{ github.event.inputs.branch }}',
                 services-json: '${{ github.event.inputs.services-json }}',
                 cluster: '${{ github.event.inputs.cluster }}',
-                image-names: '${{ env.IMAGE_NAMES }}'  # Pass the image-names to the downstream workflow
+                image-names: '${{ env.IMAGE_NAMES }}'
               }
             });
-
-
-      # - name: Deploy to Amazon ECS
-      #   uses: actions/github-script@v4
-      #   with:
-      #     script: |
-      #       const response = await octokit.actions.createWorkflowDispatch({
-      #         owner: 'your-username',
-      #         repo: 'your-repository',
-      #         workflow_id: 'deploy.yml',
-      #         inputs: {
-      #           ecs-services: 'service1 service2', // Add your ECS services here
-      #           image-names: '{"service1": "image1", "service2": "image2"}', // Add your image names here
-      #           task-definitions: '{"service1": "task-def1.json", "service2": "task-def2.json"}' // Add your task definition files here
-      #         }
-      #       });
-      #       console.log(response);
