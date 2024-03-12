@@ -130,9 +130,9 @@ jobs:
           route: POST /repos/:owner/:repo/actions/workflows/{workflow_id}/dispatches
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
-          workflow_file: deploy-ecs.yml
+          workflow_id: deploy-ecs.yml
           ref: ${{ github.event.inputs.branch }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           inputs: |
             environment=${{ github.event.inputs.environment }}
             branch=${{ github.event.inputs.branch }}
