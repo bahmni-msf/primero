@@ -125,19 +125,19 @@ jobs:
           IMAGE_NAMES=$(cat /tmp/image-names.txt)
           echo "$IMAGE_NAMES=${IMAGE_NAMES}" >> $GITHUB_OUTPUT
       - name: Trigger Deploy Workflow
-        uses: actions/github-script@v4
+        uses: octokit/request-action@v2.x
         with:
+          route: POST /repos/:owner/:repo/actions/workflows/{workflow_id}/dispatches
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          workflow_file: deploy-ecs.yml
+          ref: ${{ github.event.inputs.branch }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await octokit.repos.createDispatchEvent({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              event_type: 'workflow_dispatch',
-              client_payload: {
-                environment: '${{ github.event.inputs.environment }}',
-                branch: '${{ github.event.inputs.branch }}',
-                services-json: '${{ github.event.inputs.services-json }}',
-                cluster: '${{ github.event.inputs.cluster }}',
-                image-names: '${{ env.IMAGE_NAMES }}'
-              }
-            });
+          inputs: |
+            environment=${{ github.event.inputs.environment }}
+            branch=${{ github.event.inputs.branch }}
+            services-json=${{ github.event.inputs.services-json }}
+            cluster=${{ github.event.inputs.cluster }}
+            image-names=${{ github.event.inputs.image-names }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
