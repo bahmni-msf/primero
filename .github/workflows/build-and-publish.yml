@@ -20,7 +20,7 @@ on:
         required: false
         default: 'false'
       image-names:
-        descriptiom: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
+        description: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
         required: false
         default: 'application'
 
@@ -113,5 +113,5 @@ jobs:
         services-json=${{ github.event.inputs.services-json }}
         cluster=${{ github.event.inputs.cluster }}
         image-names=${{ github.event.inputs.image-names }}
-    secrets:
+    env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
