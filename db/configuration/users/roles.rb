@@ -97,10 +97,10 @@ cp_admin_permissions = [
     resource: Permission::SYSTEM,
     actions: [Permission::MANAGE]
   ),
-  Permission.new(
-    resource: Permission::INCIDENT,
-    actions: [Permission::READ, Permission::WRITE, Permission::CREATE]
-  ),
+  # Permission.new(
+  #   resource: Permission::INCIDENT,
+  #   actions: [Permission::READ, Permission::WRITE, Permission::CREATE]
+  # ),
   Permission.new(
     resource: Permission::AUDIT_LOG,
     actions: [Permission::READ]
@@ -129,7 +129,7 @@ create_or_update_role(
   permissions: cp_admin_permissions,
   group_permission: Permission::ALL,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_admin_families_permissions = [
@@ -163,24 +163,24 @@ cp_admin_families_permissions = [
       Permission::LINK_FAMILY_RECORD
     ]
   ),
-  Permission.new(
-    resource: Permission::FAMILY,
-    actions: [
-      Permission::READ,
-      Permission::CREATE,
-      Permission::WRITE,
-      Permission::ENABLE_DISABLE_RECORD,
-      Permission::FLAG,
-      Permission::REOPEN,
-      Permission::CLOSE,
-      Permission::EXPORT_CUSTOM,
-      Permission::EXPORT_LIST_VIEW,
-      Permission::EXPORT_CSV,
-      Permission::EXPORT_EXCEL,
-      Permission::EXPORT_JSON,
-      Permission::EXPORT_PDF
-    ]
-  ),
+  # Permission.new(
+  #   resource: Permission::FAMILY,
+  #   actions: [
+  #     Permission::READ,
+  #     Permission::CREATE,
+  #     Permission::WRITE,
+  #     Permission::ENABLE_DISABLE_RECORD,
+  #     Permission::FLAG,
+  #     Permission::REOPEN,
+  #     Permission::CLOSE,
+  #     Permission::EXPORT_CUSTOM,
+  #     Permission::EXPORT_LIST_VIEW,
+  #     Permission::EXPORT_CSV,
+  #     Permission::EXPORT_EXCEL,
+  #     Permission::EXPORT_JSON,
+  #     Permission::EXPORT_PDF
+  #   ]
+  # ),
   Permission.new(
     resource: Permission::ROLE,
     actions: [
@@ -242,10 +242,10 @@ cp_admin_families_permissions = [
     resource: Permission::SYSTEM,
     actions: [Permission::MANAGE]
   ),
-  Permission.new(
-    resource: Permission::INCIDENT,
-    actions: [Permission::READ, Permission::WRITE, Permission::CREATE]
-  ),
+  # Permission.new(
+  #   resource: Permission::INCIDENT,
+  #   actions: [Permission::READ, Permission::WRITE, Permission::CREATE]
+  # ),
   Permission.new(
     resource: Permission::AUDIT_LOG,
     actions: [Permission::READ]
@@ -274,7 +274,7 @@ create_or_update_role(
   permissions: cp_admin_families_permissions,
   group_permission: Permission::ALL,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_caseworker_permissions = [
@@ -295,7 +295,7 @@ cp_caseworker_permissions = [
       Permission::REQUEST_APPROVAL_CASE_PLAN,
       Permission::REQUEST_APPROVAL_CLOSURE,
       Permission::SEARCH_OWNED_BY_OTHERS,
-      Permission::INCIDENT_FROM_CASE,
+      # Permission::INCIDENT_FROM_CASE,
       Permission::CREATE,
       Permission::REFERRAL_FROM_SERVICE,
       Permission::REFERRAL,
@@ -305,7 +305,7 @@ cp_caseworker_permissions = [
       Permission::REMOVE_ASSIGNED_USERS,
       Permission::ENABLE_DISABLE_RECORD,
       Permission::DISPLAY_VIEW_PAGE,
-      Permission::INCIDENT_DETAILS_FROM_CASE,
+      # Permission::INCIDENT_DETAILS_FROM_CASE,
       Permission::VIEW_PHOTO
     ]
   ),
@@ -324,21 +324,21 @@ cp_caseworker_permissions = [
       Permission::DASH_SHARED_WITH_ME
     ]
   ),
-  Permission.new(
-    resource: Permission::INCIDENT,
-    actions: [
-      Permission::READ,
-      Permission::WRITE,
-      Permission::CREATE
-    ]
-  )
+  # Permission.new(
+  #   resource: Permission::INCIDENT,
+  #   actions: [
+  #     Permission::READ,
+  #     Permission::WRITE,
+  #     Permission::CREATE
+  #   ]
+  # )
 ]
 
 create_or_update_role(
   unique_id: 'role-cp-case-worker',
   name: 'CP Case Worker',
   permissions: cp_caseworker_permissions,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_caseworker_families_permissions = [
@@ -359,7 +359,7 @@ cp_caseworker_families_permissions = [
       Permission::REQUEST_APPROVAL_CASE_PLAN,
       Permission::REQUEST_APPROVAL_CLOSURE,
       Permission::SEARCH_OWNED_BY_OTHERS,
-      Permission::INCIDENT_FROM_CASE,
+      # Permission::INCIDENT_FROM_CASE,
       Permission::CREATE,
       Permission::REFERRAL_FROM_SERVICE,
       Permission::REFERRAL,
@@ -369,7 +369,7 @@ cp_caseworker_families_permissions = [
       Permission::REMOVE_ASSIGNED_USERS,
       Permission::ENABLE_DISABLE_RECORD,
       Permission::DISPLAY_VIEW_PAGE,
-      Permission::INCIDENT_DETAILS_FROM_CASE,
+      # Permission::INCIDENT_DETAILS_FROM_CASE,
       Permission::VIEW_PHOTO,
       Permission::CASE_FROM_FAMILY,
       Permission::VIEW_FAMILY_RECORD,
@@ -391,39 +391,39 @@ cp_caseworker_families_permissions = [
       Permission::DASH_SHARED_WITH_ME
     ]
   ),
-  Permission.new(
-    resource: Permission::INCIDENT,
-    actions: [
-      Permission::READ,
-      Permission::WRITE,
-      Permission::CREATE
-    ]
-  ),
-  Permission.new(
-    resource: Permission::FAMILY,
-    actions: [
-      Permission::READ,
-      Permission::CREATE,
-      Permission::WRITE,
-      Permission::ENABLE_DISABLE_RECORD,
-      Permission::FLAG,
-      Permission::EXPORT_LIST_VIEW,
-      Permission::EXPORT_CSV,
-      Permission::EXPORT_EXCEL,
-      Permission::EXPORT_JSON,
-      Permission::EXPORT_PDF,
-      Permission::CHANGE_LOG,
-      Permission::SYNC_MOBILE,
-      Permission::CASE_FROM_FAMILY
-    ]
-  )
+  # Permission.new(
+  #   resource: Permission::INCIDENT,
+  #   actions: [
+  #     Permission::READ,
+  #     Permission::WRITE,
+  #     Permission::CREATE
+  #   ]
+  # ),
+  # Permission.new(
+  #   resource: Permission::FAMILY,
+  #   actions: [
+  #     Permission::READ,
+  #     Permission::CREATE,
+  #     Permission::WRITE,
+  #     Permission::ENABLE_DISABLE_RECORD,
+  #     Permission::FLAG,
+  #     Permission::EXPORT_LIST_VIEW,
+  #     Permission::EXPORT_CSV,
+  #     Permission::EXPORT_EXCEL,
+  #     Permission::EXPORT_JSON,
+  #     Permission::EXPORT_PDF,
+  #     Permission::CHANGE_LOG,
+  #     Permission::SYNC_MOBILE,
+  #     Permission::CASE_FROM_FAMILY
+  #   ]
+  # )
 ]
 
 create_or_update_role(
   unique_id: 'role-cp-case-worker-families',
   name: 'CP Case Worker with Families',
   permissions: cp_caseworker_families_permissions,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_manager_permissions = [
@@ -445,7 +445,7 @@ cp_manager_permissions = [
       Permission::SYNC_MOBILE,
       Permission::APPROVE_CASE_PLAN,
       Permission::SEARCH_OWNED_BY_OTHERS,
-      Permission::INCIDENT_FROM_CASE,
+      # Permission::INCIDENT_FROM_CASE,
       Permission::VIEW_PROTECTION_CONCERNS_FILTER,
       Permission::ENABLE_DISABLE_RECORD,
       Permission::ADD_NOTE,
@@ -512,7 +512,7 @@ create_or_update_role(
   permissions: cp_manager_permissions,
   group_permission: Permission::GROUP,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_manager_families_permissions = [
@@ -534,7 +534,7 @@ cp_manager_families_permissions = [
       Permission::SYNC_MOBILE,
       Permission::APPROVE_CASE_PLAN,
       Permission::SEARCH_OWNED_BY_OTHERS,
-      Permission::INCIDENT_FROM_CASE,
+      # Permission::INCIDENT_FROM_CASE,
       Permission::VIEW_PROTECTION_CONCERNS_FILTER,
       Permission::ENABLE_DISABLE_RECORD,
       Permission::ADD_NOTE,
@@ -548,25 +548,25 @@ cp_manager_families_permissions = [
       Permission::LINK_FAMILY_RECORD
     ]
   ),
-  Permission.new(
-    resource: Permission::FAMILY,
-    actions: [
-      Permission::READ,
-      Permission::ENABLE_DISABLE_RECORD,
-      Permission::FLAG,
-      Permission::EXPORT_CUSTOM,
-      Permission::EXPORT_LIST_VIEW,
-      Permission::EXPORT_CSV,
-      Permission::EXPORT_EXCEL,
-      Permission::EXPORT_JSON,
-      Permission::EXPORT_PDF,
-      Permission::REOPEN,
-      Permission::CLOSE,
-      Permission::CHANGE_LOG,
-      Permission::SYNC_MOBILE,
-      Permission::CASE_FROM_FAMILY
-    ]
-  ),
+  # Permission.new(
+  #   resource: Permission::FAMILY,
+  #   actions: [
+  #     Permission::READ,
+  #     Permission::ENABLE_DISABLE_RECORD,
+  #     Permission::FLAG,
+  #     Permission::EXPORT_CUSTOM,
+  #     Permission::EXPORT_LIST_VIEW,
+  #     Permission::EXPORT_CSV,
+  #     Permission::EXPORT_EXCEL,
+  #     Permission::EXPORT_JSON,
+  #     Permission::EXPORT_PDF,
+  #     Permission::REOPEN,
+  #     Permission::CLOSE,
+  #     Permission::CHANGE_LOG,
+  #     Permission::SYNC_MOBILE,
+  #     Permission::CASE_FROM_FAMILY
+  #   ]
+  # ),
   Permission.new(
     resource: Permission::REPORT,
     actions: [
@@ -623,7 +623,7 @@ create_or_update_role(
   permissions: cp_manager_families_permissions,
   group_permission: Permission::GROUP,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_user_manager_permissions = [
@@ -696,7 +696,7 @@ create_or_update_role(
   permissions: cp_user_manager_permissions,
   group_permission: Permission::GROUP,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 agency_user_admin_permissions = [
@@ -731,7 +731,7 @@ create_or_update_role(
   permissions: agency_user_admin_permissions,
   group_permission: Permission::GROUP,
   is_manager: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 referral_permissions = [
@@ -764,7 +764,7 @@ create_or_update_role(
   permissions: referral_permissions,
   referral: true,
   form_sections: FormSection.where(unique_id: %w[basic_identity]),
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 transfer_permissions = [
@@ -796,7 +796,7 @@ create_or_update_role(
   name: 'Transfer',
   permissions: transfer_permissions,
   transfer: true,
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 cp_serviceprovider_permissions = [
@@ -833,7 +833,7 @@ create_or_update_role(
   referral: true,
   permissions: cp_serviceprovider_permissions,
   form_sections: FormSection.where(unique_id: cp_serviceprovider_forms),
-  modules: [PrimeroModule.cp]
+  modules: [PrimeroModule.potm]
 )
 
 superuser_permissions = [
@@ -841,18 +841,18 @@ superuser_permissions = [
     resource: Permission::CASE,
     actions: [Permission::MANAGE]
   ),
-  Permission.new(
-    resource: Permission::INCIDENT,
-    actions: [Permission::MANAGE]
-  ),
-  Permission.new(
-    resource: Permission::TRACING_REQUEST,
-    actions: [Permission::MANAGE]
-  ),
-  Permission.new(
-    resource: Permission::FAMILY,
-    actions: [Permission::MANAGE]
-  ),
+  # Permission.new(
+  #   resource: Permission::INCIDENT,
+  #   actions: [Permission::MANAGE]
+  # ),
+  # Permission.new(
+  #   resource: Permission::TRACING_REQUEST,
+  #   actions: [Permission::MANAGE]
+  # ),
+  # Permission.new(
+  #   resource: Permission::FAMILY,
+  #   actions: [Permission::MANAGE]
+  # ),
   Permission.new(
     resource: Permission::POTENTIAL_MATCH,
     actions: [Permission::READ]
