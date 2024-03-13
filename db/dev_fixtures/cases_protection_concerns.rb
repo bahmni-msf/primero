@@ -30,7 +30,7 @@ def create_case(id, names, lastnames, protection_concerns, number_of_children, r
         number_of_protection_concerns = rand(1..5)
         location = locations.sample
 
-        c.module_id = 'primeromodule-cp'
+        c.module_id = 'primeromodule-potm'
         c.status = %w[open closed].sample
         c.record_state = [true, false].sample
         c.name_first = first_name

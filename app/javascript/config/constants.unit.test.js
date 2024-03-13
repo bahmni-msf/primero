@@ -192,7 +192,8 @@ describe("Verifying config constant", () => {
         expect(constants.MODULES).to.deep.equal({
           CP: "primeromodule-cp",
           GBV: "primeromodule-gbv",
-          MRM: "primeromodule-mrm"
+          MRM: "primeromodule-mrm",
+          POTM: "primeromodule-potm"
         });
         expect(constants.CONSENT_GIVEN_FIELD_BY_MODULE).to.deep.equal({
           "primeromodule-cp": ["consent_for_services", "disclosure_other_orgs"],

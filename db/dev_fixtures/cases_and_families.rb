@@ -227,7 +227,7 @@ def create_records
   record_main_fields_values = main_fields_values
   workflow_status = WORKFLOW_OPTS.sample
   owner = SS_USERS.sample
-  primero_module = 'primeromodule-cp'
+  primero_module = 'primeromodule-potm'
   service_users = UserTransitionService.referral(owner, Child, primero_module).transition_users.select do |user|
     user.role.unique_id == 'role-cp-service-provider'
   end
