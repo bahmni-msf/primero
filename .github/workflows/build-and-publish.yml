@@ -127,18 +127,14 @@ jobs:
           cd .github
           cd workflows
           pwd
-#      - name: Trigger Deploy Workflow
-#        uses:
-#        with:
-#          owner: ${{ github.repository_owner }}
-#          repo: ${{ github.event.repository.name }}
-#          workflow_file: deploy-ecs.yml
-#          ref: ${{ github.event.inputs.branch }}
-#          inputs: |
-#            environment=${{ github.event.inputs.environment }}
-#            branch=${{ github.event.inputs.branch }}
-#            services-json=${{ github.event.inputs.services-json }}
-#            cluster=${{ github.event.inputs.cluster }}
-#            image-names=${{ github.event.inputs.image-names }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger Deploy Workflow
+        uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+        with:
+          inputs: |
+            environment=${{ github.event.inputs.environment }}
+            branch=${{ github.event.inputs.branch }}
+            services-json=${{ github.event.inputs.services-json }}
+            cluster=${{ github.event.inputs.cluster }}
+            image-names=${{ github.event.inputs.image-names }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
