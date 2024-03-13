@@ -1,7 +1,7 @@
 name: Build And Publish Image
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       environment:
         description: 'Environment to deploy to (Example: qa, staging, production)'
