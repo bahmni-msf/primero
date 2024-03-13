@@ -103,6 +103,16 @@ jobs:
           path: image-names.txt
 
   deploy:
+    uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+    with:
+      inputs: |
+        environment=${{ github.event.inputs.environment }}
+        branch=${{ github.event.inputs.branch }}
+        services-json=${{ github.event.inputs.services-json }}
+        cluster=${{ github.event.inputs.cluster }}
+        image-names=${{ github.event.inputs.image-names }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     needs: docker-build-publish
     if: ${{ github.event.inputs.deploy == 'true' }}
@@ -127,14 +137,14 @@ jobs:
           cd .github
           cd workflows
           pwd
-      - name: Trigger Deploy Workflow
-        uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-        with:
-          inputs: |
-            environment=${{ github.event.inputs.environment }}
-            branch=${{ github.event.inputs.branch }}
-            services-json=${{ github.event.inputs.services-json }}
-            cluster=${{ github.event.inputs.cluster }}
-            image-names=${{ github.event.inputs.image-names }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Trigger Deploy Workflow
+#        uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+#        with:
+#          inputs: |
+#            environment=${{ github.event.inputs.environment }}
+#            branch=${{ github.event.inputs.branch }}
+#            services-json=${{ github.event.inputs.services-json }}
+#            cluster=${{ github.event.inputs.cluster }}
+#            image-names=${{ github.event.inputs.image-names }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
