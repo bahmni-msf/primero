@@ -114,6 +114,4 @@ jobs:
         image-names=${{ github.event.inputs.image-names }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    runs-on: ubuntu-latest
-    needs: docker-build-publish
         
