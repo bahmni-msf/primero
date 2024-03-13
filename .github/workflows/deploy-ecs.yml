@@ -3,42 +3,42 @@
  name: Deploy to ECS
 
  on:
-  #  workflow_call:
-  #    inputs:
-  #      environment:
-  #        description: 'Environment to deploy to (Example: qa, staging, production)'
-  #        required: false
-  #        default: 'qa'
-  #      branch:
-  #        description: 'Branch to deploy from (default: ecs-github-workflow)'
-  #        required: false
-  #        default: 'ecs-github-workflow'
-  #      services-json:
-  #        description: 'Which service or services to deploy in ecs'
-  #        required: false
-  #        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
-  #      cluster:
-  #        description: 'Which Cluster to deploy'
-  #        required: false
-  #        default: 'POTMDev'
-   workflow_dispatch:
-     inputs:
-       environment:
-         description: 'Environment to deploy to (Example: qa, staging, production)'
-         required: true
-         default: 'qa'
-       branch:
-         description: 'Branch to deploy from (default: ecs-github-workflow)'
-         required: true
-         default: 'ecs-github-workflow'
-       services-json:
-         description: 'Which service or services to deploy in ecs'
-         required: true
-         default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
-       cluster:
-         description: 'Which Cluster to deploy'
-         required: true
-         default: 'POTMDev'
+    workflow_call:
+      inputs:
+        environment:
+          description: 'Environment to deploy to (Example: qa, staging, production)'
+          required: false
+          default: 'qa'
+        branch:
+          description: 'Branch to deploy from (default: ecs-github-workflow)'
+          required: false
+          default: 'ecs-github-workflow'
+        services-json:
+          description: 'Which service or services to deploy in ecs'
+          required: false
+          default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+        cluster:
+          description: 'Which Cluster to deploy'
+          required: false
+          default: 'POTMDev'
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Environment to deploy to (Example: qa, staging, production)'
+#         required: true
+#         default: 'qa'
+#       branch:
+#         description: 'Branch to deploy from (default: ecs-github-workflow)'
+#         required: true
+#         default: 'ecs-github-workflow'
+#       services-json:
+#         description: 'Which service or services to deploy in ecs'
+#         required: true
+#         default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+#       cluster:
+#         description: 'Which Cluster to deploy'
+#         required: true
+#         default: 'POTMDev'
 
  jobs:
 
