@@ -104,6 +104,7 @@ jobs:
 
   deploy:
     if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [docker-build-publish]
     uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
     with:
       inputs: |
@@ -114,4 +115,3 @@ jobs:
         image-names=${{ github.event.inputs.image-names }}
     secrets:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
