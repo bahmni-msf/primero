@@ -1,32 +1,54 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
-services_json="${SERVICES}"
+# Function for logging errors
+log_error() {
+    echo "[ERROR] $1" >&2
+}
+
+# Validate required environment variables
+if [[ -z "${SERVICES}" || -z "${Role_ARN}" || -z "${ENV_BUCKET}" || -z "${FS_ID}" ]]; then
+    log_error "One or more required environment variables are not set."
+    exit 1
+fi
+
+# Validate AWS CLI installation
+if ! command -v aws &>/dev/null; then
+    log_error "AWS CLI is not installed."
+    exit 1
+fi
+
+# Validate jq installation
+if ! command -v jq &>/dev/null; then
+    log_error "jq is not installed."
+    exit 1
+fi
 
 echo "Role_ARN: $Role_ARN"
 echo "ENV_BUCKET: $ENV_BUCKET"
 echo "FS_ID: $FS_ID"
 
-for service in $(echo "$services_json" | jq -c '.[]'); do
-    task_definition=$(echo "$service" | jq -r '.task_definition')
-    container_name=$(echo "$service" | jq -r '.container_name')
-    image=$(echo "$service" | jq -r '.image')
-    service_name=$(echo "$service" | jq -r '.service_name')
+# Loop through services in the JSON
+while IFS= read -r service; do
+    task_definition=$(jq -r '.task_definition' <<< "$service")
+    container_name=$(jq -r '.container_name' <<< "$service")
+    image=$(jq -r '.image' <<< "$service")
+    service_name=$(jq -r '.service_name' <<< "$service")
 
-    # Replace placeholder in JSON file with actual bucket name, role arn and FileSystem ID
+    # Replace placeholders in JSON file with actual bucket name, role arn, and FileSystem ID
     sed -i "s#{{BUCKET_NAME}}#$ENV_BUCKET#g; s#{{ROLE_ARN}}#$Role_ARN#g; s#{{FILESYSTEM_ID}}#$FS_ID#g" "$GITHUB_WORKSPACE/$task_definition"
 
     # Update task definition with the new image
     new_task_definition_arn=$(aws ecs register-task-definition \
-        --cli-input-json file://$GITHUB_WORKSPACE/$task_definition \
-        --container-definitions "$(jq --arg container_name "$container_name" --arg image "$image" '.containerDefinitions[] | if .name == $container_name then .image = $image else . end' $task_definition)" \
+        --cli-input-json file://"$GITHUB_WORKSPACE/$task_definition" \
+        --container-definitions "$(jq --arg container_name "$container_name" --arg image "$image" '.containerDefinitions[] | if .name == $container_name then .image = $image else . end' "$GITHUB_WORKSPACE/$task_definition")" \
         --query 'taskDefinition.taskDefinitionArn' \
         --output text)
 
     # Update ECS service with the new task definition
     aws ecs update-service \
-        --cluster $ECS_CLUSTER \
-        --service $service_name \
-        --task-definition $new_task_definition_arn
-done
+        --cluster "$ECS_CLUSTER" \
+        --service "$service_name" \
+        --task-definition "$new_task_definition_arn"
+done <<< "$(echo "$SERVICES" | jq -c '.[]')"
