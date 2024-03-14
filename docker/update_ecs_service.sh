@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-ENVIRONMENT="$1"
-
 # Function for logging errors
 log_error() {
     echo "[ERROR] $1" >&2

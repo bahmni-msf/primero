@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "application",
-            "image": "application",
+            "image": "",
             "cpu": 0,
             "portMappings": [
                 {
