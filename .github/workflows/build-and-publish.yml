@@ -119,7 +119,7 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       branch: ${{ github.event.inputs.branch }}
-#      services-json: ${{ github.event.inputs.services-json }}
-#      cluster: ${{ github.event.inputs.cluster }}
+      services-json: ${{ github.event.inputs.services-json }}
+      cluster: ${{ github.event.inputs.cluster }}
       image-names: ${{ github.event.inputs.image-names }}
     secrets: inherit
