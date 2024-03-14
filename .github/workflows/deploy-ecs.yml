@@ -63,6 +63,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.QA_AWS_REGION }}
 
+      - name: Set ECS Cluster
+        run: echo "::set-env name=ECS_CLUSTER::${{ secrets.ECS_CLUSTER }}"
+
+      - name: Set AWS Default Region
+        run: echo "::set-env name=AWS_DEFAULT_REGION::${{ secrets.AWS_DEFAULT_REGION }}"
+
+      - name: Set Environment Bucket
+        run: echo "::set-env name=ENV_BUCKET::${{ secrets.ENV_BUCKET }}"
+
       - name: Update task definition and deploy ECS service
         run: |
           chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
