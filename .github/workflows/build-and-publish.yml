@@ -23,6 +23,16 @@ on:
         description: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
         required: false
         default: 'application'
+      services-json:
+        type: string
+        description: 'Which service or services to deploy in ecs'
+        required: false
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+      cluster:
+        type: string
+        description: 'Which Cluster to deploy'
+        required: false
+        default: 'POTMDev'
 
 env:
   IMAGE_NAMES: ${{ github.event.inputs.image-names }}
@@ -109,7 +119,7 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       branch: ${{ github.event.inputs.branch }}
-      services-json: ${{ github.event.inputs.services-json }}
-      cluster: ${{ github.event.inputs.cluster }}
+#      services-json: ${{ github.event.inputs.services-json }}
+#      cluster: ${{ github.event.inputs.cluster }}
       image-names: ${{ github.event.inputs.image-names }}
     secrets: inherit
