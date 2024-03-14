@@ -113,5 +113,5 @@ jobs:
         services-json=${{ github.event.inputs.services-json }}
         cluster=${{ github.event.inputs.cluster }}
         image-names=${{ github.event.inputs.image-names }}
-    secrets:
+    env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
