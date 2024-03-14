@@ -60,14 +60,6 @@ jobs:
       ECS_CLUSTER: ${{ github.event.inputs.cluster }}
       SERVICES: ${{ github.event.inputs.services-json }}
       BRANCH: ${{ github.event.inputs.branch }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
-      Role_ARN: ${{ secrets.Role_ARN }}
-      FS_ID: ${{ secrets.FS_ID }}
-      ENVIRONMENT: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Pull Github code
@@ -82,23 +74,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.QA_AWS_REGION }}
 
-      - name: Create environment file
-        run: |
-          echo "ECS_CLUSTER=${{ secrets.ECS_CLUSTER }}" > env_file
-          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> env_file
-          echo "ENV_BUCKET=${{ secrets.ENV_BUCKET }}" >> env_file
-
       - name: Update task definition and deploy ECS service
         run: |
           chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
           $GITHUB_WORKSPACE/docker/update_ecs_service.sh
         env:
-          SERVICES: ${{ github.event.inputs.services-json }}
-          BRANCH: ${{ github.event.inputs.branch }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
           Role_ARN: ${{ secrets.Role_ARN }}
           FS_ID: ${{ secrets.FS_ID }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
