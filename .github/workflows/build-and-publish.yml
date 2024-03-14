@@ -102,7 +102,7 @@ jobs:
           name: image-names
           path: image-names.txt
 
-  deploy:
+  Deploy:
     if: ${{ github.event.inputs.deploy == 'true' }}
     needs: [docker-build-publish]
     uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
