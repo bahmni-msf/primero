@@ -74,6 +74,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.QA_AWS_REGION }}
 
+      - name: Set up Environment
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/docker/environment/${{ github.event.inputs.environment }}/task_definition
+          cp path/to/application.json $GITHUB_WORKSPACE/docker/environment/${{ github.event.inputs.environment }}/task_definition/application.json
+          cp path/to/nginx.json $GITHUB_WORKSPACE/docker/environment/${{ github.event.inputs.environment }}/task_definition/nginx.json
+
       - name: Update task definition and deploy ECS service
         run: |
           chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
