@@ -26,6 +26,9 @@ on:
         required: false
         default: 'POTMDev'
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   deploy_qa:
     runs-on: ubuntu-latest

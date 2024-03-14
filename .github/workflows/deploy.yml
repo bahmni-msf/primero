@@ -22,6 +22,9 @@ on:
         required: false
         default: 'ecs-github-workflow'
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
 
   deploy-qa:
