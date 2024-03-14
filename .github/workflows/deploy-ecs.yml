@@ -25,6 +25,10 @@ on:
         description: 'Which Cluster to deploy'
         required: false
         default: 'POTMDev'
+      image-names:
+        description: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
+        required: false
+        default: 'application'
 
 jobs:
   deploy_qa:
