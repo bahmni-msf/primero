@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export ENVIRONMENT = ${{ github.event.inputs.environment }}
+ENVIRONMENT="$1"
 
 # Function for logging errors
 log_error() {

@@ -77,7 +77,7 @@ jobs:
       - name: Update task definition and deploy ECS service
         run: |
           chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
-          $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+          $GITHUB_WORKSPACE/docker/update_ecs_service.sh "${{ github.event.inputs.environment }}"
         env:
           ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
           Role_ARN: ${{ secrets.Role_ARN }}
