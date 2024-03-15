@@ -104,7 +104,7 @@ jobs:
           ENVIRONMENT: ${{ github.event.inputs.environment }}
           ECR_URI: ${{ env.ECR_URI }}
         run: |
-          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/potm/nginx" } ]'
+          SERVICES_JSON ='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/potm/nginx" } ]'
           echo "SERVICES_JSON=$SERVICES_JSON" >> $GITHUB_ENV
 
       - name: Save Image Names as Artifact
@@ -134,7 +134,7 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       branch: ${{ github.event.inputs.branch }}
-      services-json: ${{ github.event.inputs.services-json }}
+      services-json: ${{ env.SERVICES_JSON }}
       cluster: ${{ github.event.inputs.cluster }}
       image-names: ${{ github.event.inputs.image-names }}
     secrets: inherit
