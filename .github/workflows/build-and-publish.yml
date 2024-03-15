@@ -77,6 +77,9 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Extract ECR URI
+        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+
       - name: Set Image tag variable
         run: |
           pwd
