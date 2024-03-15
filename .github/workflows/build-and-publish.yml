@@ -80,6 +80,9 @@ jobs:
       - name: Extract ECR URI
         run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
 
+      - name: Set ECR_URI environment variable
+        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+
       - name: Set Image tag variable
         run: |
           pwd
@@ -95,6 +98,15 @@ jobs:
           IMAGE_LIST=$(./docker/build.sh "${IMAGE_NAMES}" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
           # Save the list of images to a file
           echo "$IMAGE_LIST" > image-names.txt
+
+      - name: Update Service-JSON
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          ECR_URI: ${{ env.ECR_URI }}
+        run: |
+          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/potm/nginx" } ]'
+          echo "SERVICES_JSON=$SERVICES_JSON" >> $GITHUB_ENV
+
       - name: Save Image Names as Artifact
         if: always()
         run: |
