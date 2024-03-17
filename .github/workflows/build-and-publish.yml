@@ -98,14 +98,17 @@ jobs:
           IMAGE_LIST=$(./docker/build.sh "${IMAGE_NAMES}" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
           # Save the list of images to a file
           echo "$IMAGE_LIST" > image-names.txt
+      - name: Set SERVICES_JSON
+        run: |
+          SERVICES_JSON ='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/potm/nginx" } ]'
+          echo "SERVICES_JSON=$SERVICES_JSON" >> $GITHUB_ENV
 
       - name: Update Service-JSON
         env:
           ENVIRONMENT: ${{ github.event.inputs.environment }}
           ECR_URI: ${{ env.ECR_URI }}
+          SERVICES_JSON: ${{ env.SERVICES_JSON }}
         run: |
-          SERVICES_JSON ='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/potm/nginx" } ]'
-          echo "SERVICES_JSON=$SERVICES_JSON" >> $GITHUB_ENV
           echo ${{ env.SERVICES_JSON }}
 
       - name: Save Image Names as Artifact
