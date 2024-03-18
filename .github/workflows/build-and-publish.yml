@@ -124,18 +124,19 @@ jobs:
       #Service-json: image, ecr uri,repo - {{ECR}}/{{ECR_REPO}}/{{ImageTag}} - matrix
 
   Deploy:
-    if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [docker-build-publish]
-    uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-    with:
-      environment: ${{ github.event.inputs.environment }}
-      branch: ${{ github.event.inputs.branch }}
-      cluster: ${{ github.event.inputs.cluster }}
-      image-names: ${{ github.event.inputs.image-names }}
-      services-json: ${{ github.event.inputs.services-json }}
-    secrets: inherit
+      if: ${{ github.event.inputs.deploy == 'true' }}
+      needs: [docker-build-publish]
+      steps:
+        - name: Deploy using external action
+          uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+          with:
+            environment: ${{ github.event.inputs.environment }}
+            branch: ${{ github.event.inputs.branch }}
+            cluster: ${{ github.event.inputs.cluster }}
+            image-names: ${{ github.event.inputs.image-names }}
+            services-json: ${{ github.event.inputs.services-json }}
+          secrets: inherit
 
-    steps:
-      - name: Get ECR_URI from job1
-        run:
-          echo "ECR_URI from job1: ${{ needs.job1.outputs.ecr-uri }}"
+        - name: Get ECR_URI from job1
+          run:
+            echo "ECR_URI from job1: ${{ needs.job1.outputs.ecr-uri }}"
