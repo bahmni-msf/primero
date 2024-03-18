@@ -132,7 +132,7 @@ jobs:
           ECR_URI: ${{ env.ECR_URI }}
         run: |
           # Construct services-json with ECR URI
-          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}" } ]'
+          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}/'$GITHUB_RUN_NUMBER'" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}/'$GITHUB_RUN_NUMBER'" } ]'
           
           echo "$SERVICES_JSON" > services-json.txt
           echo "::set-output name=services-json::$(cat services-json.txt)"
