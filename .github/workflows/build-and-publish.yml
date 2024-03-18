@@ -46,9 +46,6 @@ env:
 jobs:
 
   docker-build-publish:
-    strategy:
-      matrix:
-        image-name: ${{ fromJson(github.event.inputs.image-names) }}
     name: Docker Build & Publish
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
@@ -99,12 +96,18 @@ jobs:
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
           echo $GITHUB_WORKSPACE
 
+      - name: Split Image Names
+        id: split-image-names
+        run: echo "::set-output name=images::$(echo ${{ github.event.inputs.image-names }} | tr ',' '\n')"
+
       - name: Build and Push Docker Image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          IMAGE_LIST=$(./docker/build.sh "${matrix.image-name}" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
+          for image in ${{ steps.split-image-names.outputs.images }}; do
+            IMAGE_LIST=$(./docker/build.sh "$image" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
+          done
           # Save the list of images to a file
           echo "$IMAGE_LIST" > image-names.txt
 
