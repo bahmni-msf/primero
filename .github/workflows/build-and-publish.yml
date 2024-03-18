@@ -27,7 +27,7 @@ on:
         type: string
         description: 'Which service or services to deploy in ecs'
         required: false
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "$ECR_URI/${{ github.event.inputs.ecr-repo }}" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "$ECR_URI/${{ github.event.inputs.ecr-repo }}" } ]'
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
       cluster:
         type: string
         description: 'Which Cluster to deploy'
