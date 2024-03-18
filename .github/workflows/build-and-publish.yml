@@ -48,7 +48,7 @@ jobs:
   docker-build-publish:
     strategy:
       matrix:
-        image-name: ${{ split(github.event.inputs.image-names, ',') }}
+        image-name: ${{ fromJson(github.event.inputs.image-names) }}
     name: Docker Build & Publish
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
