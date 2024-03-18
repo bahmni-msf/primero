@@ -34,6 +34,8 @@ on:
         required: false
         default: 'POTMDev'
 
+        #repoName
+
 env:
   IMAGE_NAMES: ${{ github.event.inputs.image-names }}
 
@@ -78,7 +80,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Extract ECR URI
-        run: echo ${{ secrets.ECR_URI }}
+        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+
+      - name: Set ECR_URI as output
+        run: echo "::set-output name=ecr-uri::${{ steps.login-ecr.outputs.registry }}"
 
       - name: Set Image tag variable
         run: |
@@ -116,6 +121,8 @@ jobs:
           name: image-names
           path: image-names.txt
 
+      #Service-json: image, ecr uri,repo - {{ECR}}/{{ECR_REPO}}/{{ImageTag}} - matrix
+
   Deploy:
     if: ${{ github.event.inputs.deploy == 'true' }}
     needs: [docker-build-publish]
@@ -127,3 +134,8 @@ jobs:
       image-names: ${{ github.event.inputs.image-names }}
       services-json: ${{ github.event.inputs.services-json }}
     secrets: inherit
+
+    steps:
+      - name: Get ECR_URI from job1
+        run:
+          echo "ECR_URI from job1: ${{ needs.job1.outputs.ecr-uri }}"
