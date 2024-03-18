@@ -27,7 +27,7 @@ on:
         type: string
         description: 'Which service or services to deploy in ecs'
         required: false
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "$ECR_URI/potm/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "$ECR_URI/potm/nginx" } ]'
       cluster:
         type: string
         description: 'Which Cluster to deploy'
@@ -78,10 +78,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Extract ECR URI
-        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
-
-      - name: Set ECR_URI environment variable
-        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+        run: echo ${{ secrets.ECR_URI }}
 
       - name: Set Image tag variable
         run: |
