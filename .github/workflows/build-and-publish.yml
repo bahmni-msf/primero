@@ -121,22 +121,28 @@ jobs:
           name: image-names
           path: image-names.txt
 
+      - name: Update Service-JSON
+        env:
+          IMAGE_NAMES: ${{ github.event.inputs.image-names }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          ECR_URI: ${{ env.ECR_URI }}
+        run: |
+          # Construct services-json with ECR URI
+          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/nginx" } ]'
+          
+          echo "$SERVICES_JSON" > services-json.txt
+          echo "::set-output name=services-json::$(cat services-json.txt)"
+
       #Service-json: image, ecr uri,repo - {{ECR}}/{{ECR_REPO}}/{{ImageTag}} - matrix
 
   Deploy:
       if: ${{ github.event.inputs.deploy == 'true' }}
       needs: [docker-build-publish]
-      steps:
-        - name: Deploy using external action
-          uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-          with:
-            environment: ${{ github.event.inputs.environment }}
-            branch: ${{ github.event.inputs.branch }}
-            cluster: ${{ github.event.inputs.cluster }}
-            image-names: ${{ github.event.inputs.image-names }}
-            services-json: ${{ github.event.inputs.services-json }}
-          secrets: inherit
-
-        - name: Get ECR_URI from job1
-          run:
-            echo "ECR_URI from job1: ${{ needs.job1.outputs.ecr-uri }}"
+      uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+      with:
+        environment: ${{ github.event.inputs.environment }}
+        branch: ${{ github.event.inputs.branch }}
+        cluster: ${{ github.event.inputs.cluster }}
+        image-names: ${{ github.event.inputs.image-names }}
+        services-json: ${{ needs.docker-build-publish.outputs.services-json }}
+      secrets: inherit
