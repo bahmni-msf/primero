@@ -33,8 +33,12 @@ on:
         description: 'Which Cluster to deploy'
         required: false
         default: 'POTMDev'
+      ecr-repo:
+        type: string
+        description: "ECR repo-name"
+        required: false
+        default: 'potm/application'
 
-        #repoName
 
 env:
   IMAGE_NAMES: ${{ github.event.inputs.image-names }}
@@ -128,12 +132,10 @@ jobs:
           ECR_URI: ${{ env.ECR_URI }}
         run: |
           # Construct services-json with ECR URI
-          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/application" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/nginx" } ]'
+          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}" } ]'
           
           echo "$SERVICES_JSON" > services-json.txt
           echo "::set-output name=services-json::$(cat services-json.txt)"
-
-      #Service-json: image, ecr uri,repo - {{ECR}}/{{ECR_REPO}}/{{ImageTag}} - matrix
 
   Deploy:
       if: ${{ github.event.inputs.deploy == 'true' }}
