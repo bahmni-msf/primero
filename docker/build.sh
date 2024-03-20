@@ -62,17 +62,17 @@ apply_tags_and_push () {
   docker tag "${repository}:${tag}${subtag}" "${docker_registry}${repository}:${tag}${subtag}" > /dev/null
   if [[ "${with_latest}" == true ]] ; then
     docker tag "${repository}:${tag}${subtag}" "${repository}:latest${subtag}" > /dev/null
-    docker tag "${repository}:${tag}${subtag}" "${docker_registry}/${repository}:latest${subtag}" > /dev/null
+    docker tag "${repository}:${tag}${subtag}" "${docker_registry}${repository}:latest${subtag}" > /dev/null
   fi
   # Push the tagged images to the repository
-  docker push "${docker_registry}/${repository}:${tag}${subtag}" > /dev/null
+  docker push "${docker_registry}${repository}:${tag}${subtag}" > /dev/null
   if [[ "${with_latest}" == true ]] ; then
-    docker push "${docker_registry}/${repository}:latest${subtag}" > /dev/null
+    docker push "${docker_registry}${repository}:latest${subtag}" > /dev/null
   fi
   # Output the image name
-  echo "${docker_registry}/${repository}:${tag}${subtag}"
+  echo "${docker_registry}${repository}:${tag}${subtag}"
   if [[ "${with_latest}" == true ]] ; then
-    echo "${docker_registry}/${repository}:latest${subtag}"
+    echo "${docker_registry}${repository}:latest${subtag}"
   fi
 }
 
