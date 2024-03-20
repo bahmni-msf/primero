@@ -34,7 +34,7 @@ jobs:
     name: Docker Build & Publish
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
-    environment: ${{ github.event.inputs.environment + '_' + github.event.inputs.cluster }}
+    environment: ${{ join([github.event.inputs.environment, github.event.inputs.cluster], '_') }}
     strategy:
       matrix:
         service: ${{fromJson(needs.parse-services.outputs.services)}}
