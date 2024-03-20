@@ -46,9 +46,9 @@ repository=${r:-""}
 with_latest=${l:-false}
 build_registry=${b:-"uniprimeroxacrdev.azurecr.io"}
 
-BUILD_NGINX="docker build -f ./docker/nginx/Dockerfile ./docker -t ${repository}/:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
-BUILD_SOLR="docker build -f ./docker/solr/Dockerfile . -t ${repository}/:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
-BUILD_APP="docker build -f ./docker/application/Dockerfile . -t ${repository}/:${tag} --build-arg APP_ROOT=${APP_ROOT} --build-arg RAILS_LOG_PATH=${RAILS_LOG_PATH} --build-arg APP_UID=${APP_UID} --build-arg APP_GID=${APP_GID} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_NGINX="docker build -f ./docker/nginx/Dockerfile ./docker -t ${repository}:${tag} --build-arg NGINX_UID=${NGINX_UID} --build-arg NGINX_GID=${NGINX_GID} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_SOLR="docker build -f ./docker/solr/Dockerfile . -t ${repository}:${tag} --build-arg BUILD_REGISTRY=${build_registry}"
+BUILD_APP="docker build -f ./docker/application/Dockerfile . -t ${repository}:${tag} --build-arg APP_ROOT=${APP_ROOT} --build-arg RAILS_LOG_PATH=${RAILS_LOG_PATH} --build-arg APP_UID=${APP_UID} --build-arg APP_GID=${APP_GID} --build-arg BUILD_REGISTRY=${build_registry}"
 
 apply_tags_and_push () {
   local image=${1}
