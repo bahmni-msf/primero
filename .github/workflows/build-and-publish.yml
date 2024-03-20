@@ -83,7 +83,7 @@ jobs:
           cat services.json
         shell: bash
 
-  Deploy:
+  update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
     needs: [docker-build-publish]
     runs-on: ubuntu-latest
@@ -98,13 +98,46 @@ jobs:
           IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
           jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
           cat updated_services.json
+          echo "::set-output name=services-json::$(<updated_services.json)"
         shell: bash
 
+  deploy_to_ecs:
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [update-service-json]
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to ECS
         uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
         with:
           environment: ${{ github.event.inputs.environment }}
           branch: ${{ github.event.inputs.branch }}
           cluster: ${{ github.event.inputs.cluster }}
-          services-json: ${{ steps.update-services.outputs.stdout }}
+          image-names: ${{ github.event.inputs.image-names }}
+          services-json: ${{ needs.deploy.outputs.services-json }}
         secrets: inherit
+
+  # Deploy:
+  #   if: ${{ github.event.inputs.deploy == 'true' }}
+  #   needs: [docker-build-publish]
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       service: ${{fromJson(needs.parse-services.outputs.services)}}
+  #   steps:
+  #     - name: Update service definitions with image names
+  #       id: update-services
+  #       run: |
+  #         # Update the image field in the services JSON with the generated image names
+  #         IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
+  #         jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
+  #         cat updated_services.json
+  #       shell: bash
+
+  #     - name: Deploy to ECS
+  #       uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
+  #       with:
+  #         environment: ${{ github.event.inputs.environment }}
+  #         branch: ${{ github.event.inputs.branch }}
+  #         cluster: ${{ github.event.inputs.cluster }}
+  #         services-json: ${{ steps.update-services.outputs.stdout }}
+  #       secrets: inherit
