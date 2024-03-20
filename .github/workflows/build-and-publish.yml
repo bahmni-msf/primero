@@ -19,36 +19,25 @@ on:
         description: 'Whether to deploy or not'
         required: false
         default: 'false'
-      image-names:
-        description: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
-        required: false
-        default: 'application'
       services-json:
-        type: string
-        description: 'Which service or services to deploy in ecs'
-        required: false
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+        description: 'JSON file containing service definitions'
+        required: true
+        default: '[ { "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "Application", "image": "", "image-name": "application", "ecr-repo": "potm/application" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "Nginx", "image": "", "image-name": "nginx", "ecr-repo": "potm/nginx" } ]'
       cluster:
         type: string
         description: 'Which Cluster to deploy'
         required: false
         default: 'POTMDev'
-      ecr-repo:
-        type: string
-        description: "ECR repo-name"
-        required: false
-        default: 'potm/application'
-
-
-env:
-  IMAGE_NAMES: ${{ github.event.inputs.image-names }}
 
 jobs:
-
   docker-build-publish:
     name: Docker Build & Publish
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
+    environment: ${{ github.event.inputs.environment + '_' + github.event.inputs.cluster }}
+    strategy:
+      matrix:
+        service: ${{fromJson(needs.parse-services.outputs.services)}}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
@@ -56,101 +45,66 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
 
       - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'qa' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'staging' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Configure AWS Credentials
-        if: ${{ github.event.inputs.environment == 'production' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.PROD_AWS_REGION }}
 
       - name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Extract ECR URI
-        run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
-
-      - name: Set ECR_URI as output
-        run: echo "::set-output name=ecr-uri::${{ steps.login-ecr.outputs.registry }}"
 
       - name: Set Image tag variable
         run: |
           pwd
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
-          echo $GITHUB_WORKSPACE
-
-      - name: Split Image Names
-        id: split-image-names
-        run: echo "::set-output name=images::$(echo ${{ github.event.inputs.image-names }} | tr ',' '\n')"
 
       - name: Build and Push Docker Image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          for image in ${{ steps.split-image-names.outputs.images }}; do
-            IMAGE_LIST=$(./docker/build.sh "$image" -r "${ECR_REGISTRY}" -t "${IMAGE_TAG}")
-          done
-          # Save the list of images to a file
-          echo "$IMAGE_LIST" > image-names.txt
+          # Run your docker build and push commands here
+          # Store the generated image names
+          IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -b "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
+          echo "::set-output name=image-name::${IMAGE_NAMES}"
 
-      - name: Save Image Names as Artifact
-        if: always()
+  parse-services:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.get-services.outputs.services }}
+    steps:
+      - name: Get service definitions
+        id: get-services
         run: |
-          # Ensure the file exists before attempting to save it as an artifact
-          if [ -f "image-names.txt" ]; then
-            cat image-names.txt
-          else
-            echo "Image names file not found."
-            exit 1
-          fi
-        working-directory: ${{ github.workspace }}
-
-      # Upload the file as an artifact
-      - name: Upload Image Names Artifact
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: image-names
-          path: image-names.txt
-
-      - name: Update Service-JSON
-        env:
-          IMAGE_NAMES: ${{ github.event.inputs.image-names }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
-          ECR_URI: ${{ env.ECR_URI }}
-        run: |
-          # Construct services-json with ECR URI
-          SERVICES_JSON='[ { "service_name": "Application", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/application.json", "container_name": "application", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}/'$GITHUB_RUN_NUMBER'" }, { "service_name": "Nginx", "task_definition": "docker/environment/'$ENVIRONMENT'/task_definition/nginx.json", "container_name": "nginx", "image": "'$ECR_URI'/${{ github.event.inputs.ecr-repo }}/'$GITHUB_RUN_NUMBER'" } ]'
-          
-          echo "$SERVICES_JSON" > services-json.txt
-          echo "::set-output name=services-json::$(cat services-json.txt)"
+          echo "${{ github.event.inputs.services-json }}" > services.json
+          cat services.json
+        shell: bash
 
   Deploy:
-      if: ${{ github.event.inputs.deploy == 'true' }}
-      needs: [docker-build-publish]
-      uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-      with:
-        environment: ${{ github.event.inputs.environment }}
-        branch: ${{ github.event.inputs.branch }}
-        cluster: ${{ github.event.inputs.cluster }}
-        image-names: ${{ github.event.inputs.image-names }}
-        services-json: ${{ needs.docker-build-publish.outputs.services-json }}
-      secrets: inherit
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [docker-build-publish]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: ${{fromJson(needs.parse-services.outputs.services)}}
+    steps:
+      - name: Update service definitions with image names
+        id: update-services
+        run: |
+          # Update the image field in the services JSON with the generated image names
+          IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
+          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
+          cat updated_services.json
+        shell: bash
+
+      - name: Deploy to ECS
+        uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
+        with:
+          environment: ${{ github.event.inputs.environment }}
+          branch: ${{ github.event.inputs.branch }}
+          cluster: ${{ github.event.inputs.cluster }}
+          services-json: ${{ steps.update-services.outputs.stdout }}
+        secrets: inherit

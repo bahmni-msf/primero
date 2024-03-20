@@ -9,27 +9,22 @@ on:
         type: string
         description: 'Environment to deploy to (Example: qa, staging, production)'
         required: false
-        default: 'qa'
+        # default: 'qa'
       branch:
         type: string
         description: 'Branch to deploy from (default: ecs-github-workflow)'
         required: false
-        default: 'ecs-github-workflow'
+        # default: 'ecs-github-workflow'
       services-json:
         type: string
         description: 'Which service or services to deploy in ecs'
         required: false
-        default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
+        # default: '[ { "service_name": "Application", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/application.json", "container_name": "application", "image": "" }, { "service_name": "Nginx", "task_definition": "docker/environment/$ENVIRONMENT/task_definition/nginx.json", "container_name": "nginx", "image": "" } ]'
       cluster:
         type: string
         description: 'Which Cluster to deploy'
         required: false
-        default: 'POTMDev'
-      image-names:
-        type: string
-        description: 'Names of the Docker images (comma-separated, e.g., "application,nginx,solr,all" or single values "application")'
-        required: false
-        default: 'application'
+        # default: 'POTMDev'
 
   workflow_dispatch:
     inputs:
@@ -51,10 +46,9 @@ on:
         default: 'POTMDev'
 
 jobs:
-  deploy_qa:
+  deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.environment == 'qa' }}
-    environment: QA
+    environment: ${{ github.event.inputs.environment + '_' + github.event.inputs.cluster }}     # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
 
     env:
       ECS_CLUSTER: ${{ github.event.inputs.cluster }}
@@ -70,9 +64,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.QA_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.QA_AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Update task definition and deploy ECS service
         run: |
