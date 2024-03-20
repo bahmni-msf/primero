@@ -48,7 +48,7 @@ jobs:
     needs: [parse-services]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
-    environment: ${{ join(github.event.inputs.environment, github.event.inputs.cluster, '_') }}
+    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
     strategy:
       matrix:
         service: ${{fromJson(needs.parse-services.outputs.services)}}
