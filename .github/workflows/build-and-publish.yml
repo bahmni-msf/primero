@@ -82,12 +82,15 @@ jobs:
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     steps:
+      - name: Save service JSON to file
+        run: echo "${{ github.event.inputs.services-json }}" > services.json
+
       - name: Update service definitions with image names
         id: update-services
         run: |
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
-          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" "${{ github.event.inputs.services-json }}" > updated_services.json
+          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
           cat updated_services.json
           echo "::set-output name=services-json::$(<updated_services.json)"
         shell: bash
