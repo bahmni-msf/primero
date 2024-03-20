@@ -101,20 +101,18 @@ jobs:
           echo "::set-output name=services-json::$(<updated_services.json)"
         shell: bash
 
+
   deploy_to_ecs:
-    if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [update-service-json]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to ECS
-        uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
-        with:
-          environment: ${{ github.event.inputs.environment }}
-          branch: ${{ github.event.inputs.branch }}
-          cluster: ${{ github.event.inputs.cluster }}
-          image-names: ${{ github.event.inputs.image-names }}
-          services-json: ${{ needs.deploy.outputs.services-json }}
-        secrets: inherit
+      if: ${{ github.event.inputs.deploy == 'true' }}
+      needs: [update-service-json]
+      uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
+      with:
+        environment: ${{ github.event.inputs.environment }}
+        branch: ${{ github.event.inputs.branch }}
+        cluster: ${{ github.event.inputs.cluster }}
+        image-names: ${{ github.event.inputs.image-names }}
+        services-json: ${{ needs.deploy.outputs.services-json }}
+      secrets: inherit
 
   # Deploy:
   #   if: ${{ github.event.inputs.deploy == 'true' }}
