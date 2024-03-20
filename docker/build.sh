@@ -81,7 +81,7 @@ apply_tags_and_push () {
 #   image_name="${images[i]}"
 #   ecr_repo="${ecr_repos[i]}"
 
-  case ${image_name} in
+  case ${image} in
     nginx)
       eval "${BUILD_NGINX}" && apply_tags_and_push nginx
       ;;
