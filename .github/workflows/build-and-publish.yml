@@ -69,7 +69,7 @@ jobs:
         run: |
           # Run your docker build and push commands here
           # Store the generated image names
-          IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -b "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
+          IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
           echo "::set-output name=image-name::${IMAGE_NAMES}"
 
   update-service-json:
