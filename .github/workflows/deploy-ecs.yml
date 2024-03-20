@@ -48,7 +48,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ join([github.event.inputs.environment, github.event.inputs.cluster], '_') }}     # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
+    environment: ${{ join(github.event.inputs.environment, github.event.inputs.cluster, '_') }}    # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
 
     env:
       ECS_CLUSTER: ${{ github.event.inputs.cluster }}

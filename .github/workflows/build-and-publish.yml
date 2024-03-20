@@ -30,11 +30,25 @@ on:
         default: 'POTMDev'
 
 jobs:
+
+  parse-services:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.get-services.outputs.services }}
+    steps:
+      - name: Get service definitions
+        id: get-services
+        run: |
+          echo "${{ github.event.inputs.services-json }}" > services.json
+          cat services.json
+        shell: bash
+
   docker-build-publish:
     name: Docker Build & Publish
+    needs: [parse-services]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
-    environment: ${{ join([github.event.inputs.environment, github.event.inputs.cluster], '_') }}
+    environment: ${{ join(github.event.inputs.environment, github.event.inputs.cluster, '_') }}
     strategy:
       matrix:
         service: ${{fromJson(needs.parse-services.outputs.services)}}
@@ -70,18 +84,6 @@ jobs:
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -b "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
           echo "::set-output name=image-name::${IMAGE_NAMES}"
-
-  parse-services:
-    runs-on: ubuntu-latest
-    outputs:
-      services: ${{ steps.get-services.outputs.services }}
-    steps:
-      - name: Get service definitions
-        id: get-services
-        run: |
-          echo "${{ github.event.inputs.services-json }}" > services.json
-          cat services.json
-        shell: bash
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
