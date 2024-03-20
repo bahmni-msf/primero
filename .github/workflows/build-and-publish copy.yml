@@ -1,4 +1,4 @@
-name: Build And Publish Image
+name: Build And Publish Image Copy
 
 on:
   workflow_dispatch:
