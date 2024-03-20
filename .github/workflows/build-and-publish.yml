@@ -111,7 +111,7 @@ jobs:
         branch: ${{ github.event.inputs.branch }}
         cluster: ${{ github.event.inputs.cluster }}
         image-names: ${{ github.event.inputs.image-names }}
-        services-json: ${{ needs.deploy.outputs.services-json }}
+        services-json: ${{ needs.update-service-json.outputs.services-json }}
       secrets: inherit
 
   # Deploy:
