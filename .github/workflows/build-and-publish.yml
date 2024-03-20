@@ -88,10 +88,38 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
+          echo services.json
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
-          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
+          
+          # Check if image names are empty
+          if [ -z "$IMAGE_NAMES" ]; then
+            echo "Error: No image names were generated."
+            exit 1
+          fi
+      
+          # Check if services.json exists
+          if [ ! -f "services.json" ]; then
+            echo "Error: services.json not found."
+            exit 1
+          fi
+      
+          # Use jq to update the image field
+          if ! updated_json=$(jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json); then
+            echo "Error: Failed to update image names in services.json."
+            exit 1
+          fi
+          
+          # Save the updated JSON to a file
+          if ! echo "$updated_json" > updated_services.json; then
+            echo "Error: Failed to save updated JSON to updated_services.json."
+            exit 1
+          fi
+          
+          # Display the updated JSON
           cat updated_services.json
+          
+          # Set the output
           echo "::set-output name=services-json::$(<updated_services.json)"
         shell: bash
 
