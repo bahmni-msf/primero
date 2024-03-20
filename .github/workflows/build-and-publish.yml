@@ -87,7 +87,7 @@ jobs:
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [docker-build-publish]
+    needs: [docker-build-publish,parse-services]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -112,7 +112,6 @@ jobs:
         environment: ${{ github.event.inputs.environment }}
         branch: ${{ github.event.inputs.branch }}
         cluster: ${{ github.event.inputs.cluster }}
-        image-names: ${{ github.event.inputs.image-names }}
         services-json: ${{ needs.update-service-json.outputs.services-json }}
       secrets: inherit
 
