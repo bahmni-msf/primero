@@ -40,7 +40,8 @@ jobs:
         id: get-services
         run: |
           echo "${{ github.event.inputs.services-json }}" > services.json
-          cat services.json
+          SERVICES_JSON=$(cat services.json)  # Capture the content of services.json
+          echo "::set-output name=services::${SERVICES_JSON}"  # Set the output
         shell: bash
 
   docker-build-publish:
