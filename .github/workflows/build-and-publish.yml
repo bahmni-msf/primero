@@ -43,6 +43,11 @@ jobs:
           SERVICES_JSON=$(cat services.json)  # Capture the content of services.json
           echo "::set-output name=services::${SERVICES_JSON}"  # Set the output
         shell: bash
+      - name: Debug JSON data
+        run: |
+          echo "Parsed JSON data:"
+          cat services.json
+        shell: bash
 
   docker-build-publish:
     name: Docker Build & Publish
@@ -115,29 +120,3 @@ jobs:
         cluster: ${{ github.event.inputs.cluster }}
         services-json: ${{ needs.update-service-json.outputs.services-json }}
       secrets: inherit
-
-  # Deploy:
-  #   if: ${{ github.event.inputs.deploy == 'true' }}
-  #   needs: [docker-build-publish]
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       service: ${{fromJson(needs.parse-services.outputs.services)}}
-  #   steps:
-  #     - name: Update service definitions with image names
-  #       id: update-services
-  #       run: |
-  #         # Update the image field in the services JSON with the generated image names
-  #         IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
-  #         jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
-  #         cat updated_services.json
-  #       shell: bash
-
-  #     - name: Deploy to ECS
-  #       uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@${{ github.event.inputs.branch }}
-  #       with:
-  #         environment: ${{ github.event.inputs.environment }}
-  #         branch: ${{ github.event.inputs.branch }}
-  #         cluster: ${{ github.event.inputs.cluster }}
-  #         services-json: ${{ steps.update-services.outputs.stdout }}
-  #       secrets: inherit
