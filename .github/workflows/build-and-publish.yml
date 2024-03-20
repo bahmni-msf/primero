@@ -37,6 +37,7 @@ jobs:
     if: ${{ github.event.inputs.build == 'true' }}
     environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
     strategy:
+      fail-fast: false
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     steps:
@@ -77,6 +78,7 @@ jobs:
     needs: [docker-build-publish]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     steps:
@@ -85,7 +87,7 @@ jobs:
         run: |
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
-          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json > updated_services.json
+          jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" "${{ github.event.inputs.services-json }}" > updated_services.json
           cat updated_services.json
           echo "::set-output name=services-json::$(<updated_services.json)"
         shell: bash
@@ -95,6 +97,7 @@ jobs:
       if: ${{ github.event.inputs.deploy == 'true' }}
       needs: [update-service-json]
       strategy:
+        fail-fast: false
         matrix:
           service: ${{fromJson(github.event.inputs.services-json)}}
       uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
