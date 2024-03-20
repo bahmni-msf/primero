@@ -18,7 +18,7 @@ on:
       deploy:
         description: 'Whether to deploy or not'
         required: false
-        default: 'false'
+        default: 'true'
       services-json:
         description: 'JSON file containing service definitions'
         required: true
