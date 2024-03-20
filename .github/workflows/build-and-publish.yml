@@ -57,7 +57,7 @@ jobs:
     environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
     strategy:
       matrix:
-        service: ${{fromJson(needs.parse-services.outputs.services)}}
+        service: ${{fromJson(github.event.inputs.services-json)}}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
