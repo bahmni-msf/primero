@@ -59,7 +59,7 @@ apply_tags_and_push () {
   local subtag=${2:-""}
   [[ -n "${subtag}" ]] && subtag="-${subtag}"
 
-  docker tag "${repository}:${tag}${subtag}" "${docker_registry}/${repository}:${tag}${subtag}" > /dev/null
+  docker tag "${repository}:${tag}${subtag}" "${docker_registry}${repository}:${tag}${subtag}" > /dev/null
   if [[ "${with_latest}" == true ]] ; then
     docker tag "${repository}:${tag}${subtag}" "${repository}:latest${subtag}" > /dev/null
     docker tag "${repository}:${tag}${subtag}" "${docker_registry}/${repository}:latest${subtag}" > /dev/null
