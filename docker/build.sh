@@ -73,13 +73,13 @@ apply_tags_and_push () {
 }
 
 # Parse image names and corresponding ECR repositories
-IFS=',' read -r -a images <<< "${IMAGE_NAMES}"
-IFS=',' read -r -a ecr_repos <<< "${ECR_REPO}"
+# IFS=',' read -r -a images <<< "${IMAGE_NAMES}"
+# IFS=',' read -r -a ecr_repos <<< "${ECR_REPO}"
 
 # Loop through each image and its corresponding repository
-for (( i=0; i<${#images[@]}; i++ )); do
-  image_name="${images[i]}"
-  ecr_repo="${ecr_repos[i]}"
+# for (( i=0; i<${#images[@]}; i++ )); do
+#   image_name="${images[i]}"
+#   ecr_repo="${ecr_repos[i]}"
 
   case ${image_name} in
     nginx)
@@ -102,4 +102,4 @@ for (( i=0; i<${#images[@]}; i++ )); do
       exit 1
     ;;
   esac
-done
+# done

@@ -31,27 +31,8 @@ on:
 
 jobs:
 
-  parse-services:
-    runs-on: ubuntu-latest
-    outputs:
-      services: ${{ steps.get-services.outputs.services }}
-    steps:
-      - name: Get service definitions
-        id: get-services
-        run: |
-          echo "${{ github.event.inputs.services-json }}" > services.json
-          SERVICES_JSON=$(cat services.json)  # Capture the content of services.json
-          echo "::set-output name=services::${SERVICES_JSON}"  # Set the output
-        shell: bash
-      - name: Debug JSON data
-        run: |
-          echo "Parsed JSON data:"
-          cat services.json
-        shell: bash
-
   docker-build-publish:
     name: Docker Build & Publish
-    needs: [parse-services]
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.build == 'true' }}
     environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
@@ -93,11 +74,11 @@ jobs:
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [docker-build-publish,parse-services]
+    needs: [docker-build-publish]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ${{fromJson(needs.parse-services.outputs.services)}}
+        service: ${{fromJson(github.event.inputs.services-json)}}
     steps:
       - name: Update service definitions with image names
         id: update-services
@@ -113,6 +94,9 @@ jobs:
   deploy_to_ecs:
       if: ${{ github.event.inputs.deploy == 'true' }}
       needs: [update-service-json]
+      strategy:
+        matrix:
+          service: ${{fromJson(github.event.inputs.services-json)}}
       uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
       with:
         environment: ${{ github.event.inputs.environment }}
