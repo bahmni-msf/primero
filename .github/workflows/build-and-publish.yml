@@ -74,7 +74,7 @@ jobs:
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
           echo "Generated image names: $IMAGE_NAMES"
-          echo "::set-output name=image-name::${IMAGE_NAMES}"
+          echo "image-name=${IMAGE_NAMES}" >> "$GITHUB_OUTPUT"
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
@@ -95,7 +95,7 @@ jobs:
         run: |
           echo services.json
           # Update the image field in the services JSON with the generated image names
-          IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs.image-name }}" | tr -d '\n')
+          IMAGE_NAMES=$(echo "$image-name" | tr -d '\n')
           
           # Check if image names are empty
           if [ -z "$IMAGE_NAMES" ]; then
@@ -126,6 +126,8 @@ jobs:
           
           # Set the output
           echo "::set-output name=services-json::$(<updated_services.json)"
+        env:
+          image-name: ${{needs.docker-build-publish.outputs.image-name}}
         shell: bash
 
 
