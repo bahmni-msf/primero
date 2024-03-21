@@ -94,8 +94,7 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
-          cat services.json
-          echo "Image_name: $image-name"
+          echo "Image_name: $image_name"
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "$image-name" | tr -d '\n')
           
@@ -129,7 +128,7 @@ jobs:
           # Set the output
           echo "::set-output name=services-json::$(<updated_services.json)"
         env:
-          image-name: ${{needs.docker-build-publish.outputs.image-name}}
+          image_name: ${{needs.docker-build-publish.outputs.image-name}}
         shell: bash
 
 
