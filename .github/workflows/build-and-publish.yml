@@ -4,33 +4,32 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to (Example: qa, staging, production)'
+        description: "Environment to deploy to (Example: qa, staging, production)"
         required: true
-        default: 'qa'
+        default: "qa"
       branch:
-        description: 'Branch to deploy from (default: ecs-github-workflow)'
+        description: "Branch to deploy from (default: ecs-github-workflow)"
         required: true
-        default: 'ecs-github-workflow'
+        default: "ecs-github-workflow"
       build:
-        description: 'Whether to build or not'
+        description: "Whether to build or not"
         required: false
-        default: 'true'
+        default: "true"
       deploy:
-        description: 'Whether to deploy or not'
+        description: "Whether to deploy or not"
         required: false
-        default: 'true'
+        default: "true"
       services-json:
-        description: 'JSON file containing service definitions'
+        description: "JSON file containing service definitions"
         required: true
         default: '[ { "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "Application", "image": "", "image-name": "application", "ecr-repo": "potm/application" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "Nginx", "image": "", "image-name": "nginx", "ecr-repo": "potm/nginx" } ]'
       cluster:
         type: string
-        description: 'Which Cluster to deploy'
+        description: "Which Cluster to deploy"
         required: false
-        default: 'POTMDev'
+        default: "POTMDev"
 
 jobs:
-
   docker-build-publish:
     name: Docker Build & Publish
     runs-on: ubuntu-latest
@@ -74,12 +73,27 @@ jobs:
           # Run your docker build and push commands here
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
-          echo "Generated image names: $IMAGE_NAMES"
-          echo "image-name=${IMAGE_NAMES}" >> "$GITHUB_OUTPUT"
+          echo "$IMAGE_NAMES" > image-names.txt
 
-      - name: Echo image-name
+      - name: Save Image Names as Artifact
+        if: always()
         run: |
-          echo "Image name: ${{ steps.build-and-push.outputs.image-name }}"
+          # Ensure the file exists before attempting to save it as an artifact
+          if [ -f "image-names.txt" ]; then
+            cat image-names.txt
+          else
+            echo "Image names file not found."
+            exit 1
+          fi
+        working-directory: ${{ github.workspace }}
+
+        # Upload the file as an artifact
+      - name: Upload Image Names Artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: image-names
+          path: image-names.txt
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
@@ -96,59 +110,68 @@ jobs:
         run: |
           echo "${{ github.event.inputs.services-json }}" > services.json
 
+      - name: Download Image Names Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: image-names
+          path: ${{ github.workspace }}
+
+      - name: Read Image Names from Artifact
+        run: |
+          IMAGE_NAMES=$(<${{ github.workspace }}/image-names.txt)
+          echo "Image Names: $IMAGE_NAMES"
+          echo "::set-env name=IMAGE_NAMES::$IMAGE_NAMES"
+        shell: bash
 
       - name: Update service definitions with image names
         id: update-services
         run: |
           echo "Image_name: $image_name"
           # Update the image field in the services JSON with the generated image names
-          IMAGE_NAMES=$(echo "$image-name" | tr -d '\n')
-          
+          IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
+
           # Check if image names are empty
           if [ -z "$IMAGE_NAMES" ]; then
             echo "Error: No image names were generated."
             exit 1
           fi
-      
+
           # Check if services.json exists
           if [ ! -f "services.json" ]; then
             echo "Error: services.json not found."
             exit 1
           fi
-      
+
           # Use jq to update the image field
           if ! updated_json=$(jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json); then
             echo "Error: Failed to update image names in services.json."
             exit 1
           fi
-          
+
           # Save the updated JSON to a file
           if ! echo "$updated_json" > updated_services.json; then
             echo "Error: Failed to save updated JSON to updated_services.json."
             exit 1
           fi
-          
+
           # Display the updated JSON
           cat updated_services.json
-          
+
           # Set the output
           echo "::set-output name=services-json::$(<updated_services.json)"
-        env:
-          image_name: ${{needs.docker-build-publish.outputs.image-name}}
         shell: bash
 
-
   deploy_to_ecs:
-      if: ${{ github.event.inputs.deploy == 'true' }}
-      needs: [update-service-json]
-      strategy:
-        fail-fast: false
-        matrix:
-          service: ${{fromJson(github.event.inputs.services-json)}}
-      uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-      with:
-        environment: ${{ github.event.inputs.environment }}
-        branch: ${{ github.event.inputs.branch }}
-        cluster: ${{ github.event.inputs.cluster }}
-        services-json: ${{ needs.update-service-json.outputs.services-json }}
-      secrets: inherit
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [update-service-json]
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{fromJson(github.event.inputs.services-json)}}
+    uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      branch: ${{ github.event.inputs.branch }}
+      cluster: ${{ github.event.inputs.cluster }}
+      services-json: ${{ needs.update-service-json.outputs.services-json }}
+    secrets: inherit
