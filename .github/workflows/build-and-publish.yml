@@ -77,6 +77,10 @@ jobs:
           echo "Generated image names: $IMAGE_NAMES"
           echo "image-name=${IMAGE_NAMES}" >> "$GITHUB_OUTPUT"
 
+      - name: Echo image-name
+        run: |
+          echo "Image name: ${{ steps.build-and-push.outputs.image-name }}"
+
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
     needs: [docker-build-publish]
@@ -89,7 +93,9 @@ jobs:
       services-json: ${{ steps.update-services.services-json }}
     steps:
       - name: Save service JSON to file
-        run: echo "${{ github.event.inputs.services-json }}" > services.json
+        run: |
+          echo "${{ github.event.inputs.services-json }}" > services.json
+
 
       - name: Update service definitions with image names
         id: update-services
