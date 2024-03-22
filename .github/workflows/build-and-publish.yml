@@ -40,7 +40,7 @@ jobs:
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     outputs:
-      image-name: ${{ steps.build-and-push.outputs.image-name }}
+      image-name-${{ env.uniqueID }}: ${{ steps.build-and-push.outputs.image-name }}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
@@ -64,6 +64,11 @@ jobs:
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
+      - name: Generate Unique ID
+        id: generate-unique-id
+        run: |
+          echo "uniqueID=$(date +%s)" >> $GITHUB_ENV
+
       - name: Build and Push Docker Image to ECR
         id: build-and-push
         env:
@@ -73,27 +78,7 @@ jobs:
           # Run your docker build and push commands here
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
-          echo "$IMAGE_NAMES" > image-names.txt
-
-      - name: Save Image Names as Artifact
-        if: always()
-        run: |
-          # Ensure the file exists before attempting to save it as an artifact
-          if [ -f "image-names.txt" ]; then
-            cat image-names.txt
-          else
-            echo "Image names file not found."
-            exit 1
-          fi
-        working-directory: ${{ github.workspace }}
-
-        # Upload the file as an artifact
-      - name: Upload Image Names Artifact
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: image-names
-          path: image-names.txt
+          echo "::set-output name=image-name-${{ env.uniqueID }}::${IMAGE_NAMES}"
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
@@ -110,23 +95,12 @@ jobs:
         run: |
           echo "${{ github.event.inputs.services-json }}" > services.json
 
-      - name: Download Image Names Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: image-names
-          path: ${{ github.workspace }}
-
-      - name: Read Image Names from Artifact
-        run: |
-          IMAGE_NAMES=$(<${{ github.workspace }}/image-names.txt)
-          echo "Image Names: $IMAGE_NAMES"
-          echo "::set-env name=IMAGE_NAMES::$IMAGE_NAMES"
-        shell: bash
-
       - name: Update service definitions with image names
         id: update-services
         run: |
-          echo "Image_name: $image_name"
+          # Read image names from environment variables
+          IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs['image-name-${{ env.uniqueID }}'] }}")
+
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
 
