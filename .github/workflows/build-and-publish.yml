@@ -101,7 +101,7 @@ jobs:
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     outputs:
-      services-json: ${{ steps.update-services.services-json }}
+      services-json: ${{ steps.update-services.MODIFIED_JSON}}
     steps:
 
       - name: Pull Github code
@@ -136,7 +136,7 @@ jobs:
         id: update-services
         run: |
           MODIFIED_JSON=$(./docker/modify-json.sh)
-          echo "MODIFIED_JSON=$MODIFIED_JSON"
+          echo "MODIFIED_JSON=$MODIFIED_JSON"   >> "$GITHUB_OUTPUT"
         env:
           services: ${{ github.event.inputs.services-json }}
         shell: bash
