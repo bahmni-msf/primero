@@ -12,7 +12,7 @@
     "task_definition": "docker/environment/qa/task_definition/nginx.json",
     "container_name": "Nginx",
     "image": "",
-    "image-name": "application",
+    "image-name": "nginx",
     "ecr-repo": "potm/nginx"
   }
 ]

@@ -39,8 +39,6 @@ jobs:
       fail-fast: false
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
-    outputs:
-      image-name-${{ env.uniqueID }}: ${{ steps.build-and-push.outputs.image-name }}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
@@ -78,7 +76,20 @@ jobs:
           # Run your docker build and push commands here
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
-          echo "::set-output name=image-name-${{ env.uniqueID }}::${IMAGE_NAMES}"
+
+      - name: Create Artifact
+        if: always()  # Always execute to create the artifacts
+        run: |
+          echo $IMAGE_NAMES > ${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt
+        working-directory: ${{ github.workspace }}
+        continue-on-error: true
+        
+      - name: Upload Artifacts
+        if: always()  # Always execute to upload the artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: ${{ matrix.service.image-name }}-artifact
+            path: ${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt
 
   update-service-json:
     if: ${{ github.event.inputs.deploy == 'true' }}
