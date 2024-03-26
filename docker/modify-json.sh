@@ -2,8 +2,8 @@ set -euxo pipefail
 
 # Read image names from environment variables
 echo "Generated Image Names=$IMAGE_NAMES"
-cat services.json
-
+SERVICES_JSON=$(<services.json)
+echo $SERVICES_JSON
 # Update the image field in the services JSON with the generated image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
 
