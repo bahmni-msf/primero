@@ -147,7 +147,7 @@ jobs:
           fi
 
           # Use jq to update the image field
-          if ! updated_json=$(jq '.[].image = $image_names' --arg image_names "$IMAGE_NAMES" services.json); then
+          if ! updated_json=$(jq --arg image_names "$IMAGE_NAMES" '.[].image = $image_names | .[].image |= @sh' services.json); then
             echo "Error: Failed to update image names in services.json."
             exit 1
           fi
