@@ -2,6 +2,7 @@ set -euxo pipefail
 
 # Read image names from environment variables
 echo "Generated Image Names=$IMAGE_NAMES"
+echo "Service: $SERVICES"
 
 # Update the image field in the services JSON with the generated image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
@@ -22,7 +23,7 @@ fi
 IMAGE_JSON="{\"image\": \"$IMAGE_NAMES\"}"
 
 # Use jq to merge the constructed JSON with the existing JSON
-updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' services.json) || {
+updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' $SERVICES) || {
   echo "Error: Failed to update image names in services.json. Exiting..."
   exit 1
 }
