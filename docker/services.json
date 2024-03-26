@@ -1,0 +1,1 @@
+[   {     "service_name": "application",     "task_definition": "docker/environment/qa/task_definition/application.json",     "container_name": "Application",     "image": "",     "image-name": "application",     "ecr-repo": "potm/application"   } ]

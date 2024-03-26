@@ -109,10 +109,10 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      - name: Save service JSON to file
-        run: |
-          echo "${{ github.event.inputs.services-json }}" > services.json
-          ls -la
+      # - name: Save service JSON to file
+      #   run: |
+      #     echo "${{ github.event.inputs.services-json }}" > services.json
+      #     ls -la
 
       - name: Download Artifact
         uses: actions/download-artifact@v2
