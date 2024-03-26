@@ -12,9 +12,11 @@ if [ -z "$IMAGE_NAMES" ]; then
   exit 1
 fi
 
+SERVICES_JSON_PATH="docker/services.json"
+
 # Check if services.json exists
-if [ ! -f "services.json" ]; then
-  echo "Error: services.json not found."
+if [ ! -f "$SERVICES_JSON_PATH" ]; then
+  echo "Error: $SERVICES_JSON_PATH not found."
   exit 1
 fi
 
@@ -22,7 +24,7 @@ fi
 IMAGE_JSON="{\"image\": \"$IMAGE_NAMES\"}"
 
 # Use jq to merge the constructed JSON with the existing JSON
-updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' docker/services.json) || {
+updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' "$SERVICES_JSON_PATH") || {
   echo "Error: Failed to update image names in services.json. Exiting..."
   exit 1
 }
