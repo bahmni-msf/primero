@@ -18,14 +18,14 @@ if [ ! -f "services.json" ]; then
   exit 1
 fi
 
-# Parse the JSON file and capture any errors
-updated_json=$(jq '.' services.json) || { echo "Error: Failed to parse JSON in services.json"; exit 1; }
-
 # Construct JSON object for image names
 IMAGE_JSON="{\"image\": \"$IMAGE_NAMES\"}"
 
 # Use jq to merge the constructed JSON with the existing JSON
-updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' <<< "$updated_json") || { echo "Error: Failed to update image names in services.json."; exit 1; }
+updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' services.json) || {
+  echo "Error: Failed to update image names in services.json. Exiting..."
+  exit 1
+}
 
 # Save the updated JSON to a file
 if ! echo "$updated_json" > updated_services.json; then
