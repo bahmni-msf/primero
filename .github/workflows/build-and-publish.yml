@@ -107,11 +107,28 @@ jobs:
         run: |
           echo "${{ github.event.inputs.services-json }}" > services.json
 
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.service.image-name }}-artifact
+          path: artifacts
+    
+      - name: Read Image Names
+        run: |
+          image_file="artifacts/${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt"
+          if [ -f "$image_file" ]; then
+            echo "Image file exists"
+            IMAGE_NAMES=$(cat "$image_file")  >> "$GITHUB_ENV"
+          else
+            echo "Image file does not exist"
+            exit 1
+          fi
+
       - name: Update service definitions with image names
         id: update-services
         run: |
           # Read image names from environment variables
-          IMAGE_NAMES=$(echo "${{ needs.docker-build-publish.outputs['image-name-${{ env.uniqueID }}'] }}")
+          IMAGE_NAMES=$IMAGE_NAMES"
 
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
