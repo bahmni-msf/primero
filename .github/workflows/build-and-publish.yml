@@ -76,6 +76,7 @@ jobs:
           # Run your docker build and push commands here
           # Store the generated image names
           IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
+          echo "$IMAGE_NAMES"  >> "$GITHUB_ENV"
 
       - name: Create Artifact
         if: always()  # Always execute to create the artifacts
