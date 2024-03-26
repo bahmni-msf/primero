@@ -118,7 +118,8 @@ jobs:
           image_file="artifacts/${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt"
           if [ -f "$image_file" ]; then
             echo "Image file exists"
-            IMAGE_NAMES=$(cat "$image_file")  >> "$GITHUB_ENV"
+            IMAGE_NAMES=$(cat "$image_file")
+            echo "IMAGE_NAMES=$IMAGE_NAMES"  >> "$GITHUB_ENV"
           else
             echo "Image file does not exist"
             exit 1
@@ -128,7 +129,7 @@ jobs:
         id: update-services
         run: |
           # Read image names from environment variables
-          IMAGE_NAMES=$IMAGE_NAMES"
+          echo "Generated Image Names=$IMAGE_NAMES"
 
           # Update the image field in the services JSON with the generated image names
           IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
