@@ -137,8 +137,8 @@ jobs:
         run: |
           MODIFIED_JSON=$(./docker/modify-json.sh)
           echo "MODIFIED_JSON=$MODIFIED_JSON"
-          env:
-            services: ${{ github.event.inputs.services-json }}
+        env:
+          services: ${{ github.event.inputs.services-json }}
         shell: bash
 
   deploy_to_ecs:
