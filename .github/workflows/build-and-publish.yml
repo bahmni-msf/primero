@@ -101,18 +101,13 @@ jobs:
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     outputs:
-      services-json: ${{ steps.update-services.MODIFIED_JSON}}
+      services-json: ${{ steps.update-services.outputs.MODIFIED_JSON}}
     steps:
 
       - name: Pull Github code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.branch }}
-
-      # - name: Save service JSON to file
-      #   run: |
-      #     echo "${{ github.event.inputs.services-json }}" > services.json
-      #     ls -la
 
       - name: Download Artifact
         uses: actions/download-artifact@v2
