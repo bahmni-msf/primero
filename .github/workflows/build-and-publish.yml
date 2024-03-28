@@ -62,11 +62,6 @@ jobs:
           echo $GITHUB_RUN_NUMBER
           echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
-      - name: Generate Unique ID
-        id: generate-unique-id
-        run: |
-          echo "uniqueID=$(date +%s)" >> $GITHUB_ENV
-
       - name: Build and Push Docker Image to ECR
         id: build-and-push
         env:
@@ -131,7 +126,7 @@ jobs:
         id: update-services
         run: |
           MODIFIED_JSON=$(./docker/modify-json.sh)
-          echo "MODIFIED_JSON=$MODIFIED_JSON"   >> "$GITHUB_OUTPUT"
+          echo "::set-output name=MODIFIED_JSON::$MODIFIED_JSON"
         env:
           services: ${{ github.event.inputs.services-json }}
         shell: bash
