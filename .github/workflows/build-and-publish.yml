@@ -96,7 +96,7 @@ jobs:
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
     outputs:
-      services-json: ${{ steps.update-services.outputs.MODIFIED_JSON}}
+      services-updated-json: ${{ steps.update-services.outputs.services-updated-json}}
     steps:
 
       - name: Pull Github code
@@ -125,10 +125,7 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
-          MODIFIED_JSON=$(./docker/modify-json.sh)
-          echo "::set-output name=MODIFIED_JSON::$MODIFIED_JSON"
-        env:
-          services: ${{ github.event.inputs.services-json }}
+          ./docker/modify-json.sh
         shell: bash
 
   deploy_to_ecs:
@@ -143,5 +140,5 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       branch: ${{ github.event.inputs.branch }}
       cluster: ${{ github.event.inputs.cluster }}
-      services-json: ${{ needs.update-service-json.outputs.services-json }}
+      services-json: ${{ needs.update-service-json.outputs.services-updated-json }}
     secrets: inherit

@@ -39,4 +39,4 @@ fi
 cat updated_services.json
 
 # Set the output
-echo "::set-output name=services-json::$(<updated_services.json)"
+echo "::set-output name=services-updated-json::$(<updated_services.json)"
