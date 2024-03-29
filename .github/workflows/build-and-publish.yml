@@ -125,8 +125,14 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
-          ./docker/modify-json.sh
+          ./docker/modify-json.sh | jq --compact-output '.' > updated-services.json
+          echo "::set-output name=services-updated-json::updated-services.json"
         shell: bash
+
+      - name: Verify Output
+        run: |
+          cat updated-services.json
+      
 
   deploy_to_ecs:
     if: ${{ github.event.inputs.deploy == 'true' }}
