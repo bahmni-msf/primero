@@ -1,10 +1,10 @@
 [
   {
     "service_name": "application",
-    "task_definition": "docker/environment/qa/task_definition/application.json",
-    "container_name": "Application",
+    "task_definition": "docker/environment/qa/task_definition/nginx.json",
+    "container_name": "nginx",
     "image": "",
-    "image-name": "application",
-    "ecr-repo": "potm/application"
+    "image-name": "nginx",
+    "ecr-repo": "potm/nginx"
   }
 ]
