@@ -24,7 +24,7 @@ fi
 IMAGE_JSON="{\"image\": \"$IMAGE_NAMES\"}"
 
 # Use jq to merge the constructed JSON with the existing JSON
-updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] |= . + $image_json' "$SERVICES_JSON_PATH") || {
+updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] | select(.image != "") |= . + $image_json' "$SERVICES_JSON_PATH") || {
   echo "Error: Failed to update image names in services.json. Exiting..."
   exit 1
 }
