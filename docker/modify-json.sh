@@ -1,9 +1,11 @@
+#!/bin/bash
+
 set -euxo pipefail
 
 # Read image names from environment variables
 echo "Generated Image Names=$IMAGE_NAMES"
 
-# Update the image field in the services JSON with the generated image names
+# Remove any newline characters from the image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
 
 # Check if image names are empty
@@ -20,23 +22,14 @@ if [ ! -f "$SERVICES_JSON_PATH" ]; then
   exit 1
 fi
 
-# Construct JSON object for image names
-IMAGE_JSON="{\"image\": \"$IMAGE_NAMES\"}"
-
-# Use jq to merge the constructed JSON with the existing JSON
-updated_json=$(jq --argjson image_json "$IMAGE_JSON" '.[] | select(.image != "") |= . + $image_json' "$SERVICES_JSON_PATH") || {
+# Replace the empty image field with the generated image names
+sed -i "s/\"image\": \"\"/\"image\": \"$IMAGE_NAMES\"/g" "$SERVICES_JSON_PATH" || {
   echo "Error: Failed to update image names in services.json. Exiting..."
   exit 1
 }
 
-# Save the updated JSON to a file
-if ! echo "$updated_json" > updated_services.json; then
-  echo "Error: Failed to save updated JSON to updated_services.json."
-  exit 1
-fi
-
 # Display the updated JSON
-cat updated_services.json
+cat "$SERVICES_JSON_PATH"
 
 # Set the output
-echo "::set-output name=services-updated-json::$(<updated_services.json)"
+echo "::set-output name=services-updated-json::$(<"$SERVICES_JSON_PATH")"
