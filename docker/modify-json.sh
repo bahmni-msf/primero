@@ -23,7 +23,7 @@ if [ ! -f "$SERVICES_JSON_PATH" ]; then
 fi
 
 # Replace the empty image field with the generated image names
-sed -i "s/\"image\": \"\"/\"image\": \"$IMAGE_NAMES\"/g" "$SERVICES_JSON_PATH" || {
+sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_JSON_PATH" || {
   echo "Error: Failed to update image names in services.json. Exiting..."
   exit 1
 }
