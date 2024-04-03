@@ -32,9 +32,12 @@ fi
 echo "After:"
 cat "$SERVICES_JSON_PATH"
 
-# Read the content of the updated JSON file
-UPDATED_JSON=$(<"$SERVICES_JSON_PATH")
+# # Read the content of the updated JSON file
+# UPDATED_JSON=$(<"$SERVICES_JSON_PATH")
 
-# Set the output
-# echo "::set-output name=services-updated-json::$UPDATED_JSON"
-echo "UPDATED JSON: $UPDATED_JSON"
+# # Set the output
+# # echo "::set-output name=services-updated-json::$UPDATED_JSON"
+# echo "UPDATED JSON: $UPDATED_JSON"
+
+# Output the updated JSON content to standard output
+cat "$SERVICES_JSON_PATH"
