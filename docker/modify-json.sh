@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 # Read image names from environment variables
-echo "Generated Image Names=$IMAGE_NAMES"
+# echo "Generated Image Names=$IMAGE_NAMES"
 
 # Remove any newline characters from the image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
