@@ -26,4 +26,4 @@ fi
 sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_JSON_PATH"
 
 # Output the updated JSON content to standard output
-cat "$SERVICES_JSON_PATH"
+echo "$(cat "$SERVICES_JSON_PATH")"

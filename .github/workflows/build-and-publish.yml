@@ -125,6 +125,7 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
+          chmod +x docker/modify-json.sh
           UPDATED_JSON=$(./docker/modify-json.sh)
           echo "Services updated JSON: $UPDATED_JSON"
           echo "::set-output name=services-updated-json::$UPDATED_JSON"
