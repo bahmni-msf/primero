@@ -125,8 +125,9 @@ jobs:
       - name: Update service definitions with image names
         id: update-services
         run: |
-          ./docker/modify-json.sh
-          echo "services-updated-json=$UPDATED_JSON"   >> "$GITHUB_OUTPUT"
+          UPDATED_JSON=$(./docker/modify-json.sh)
+          echo "Services updated JSON: $UPDATED_JSON"
+          echo "::set-output name=services-updated-json::$UPDATED_JSON"
         shell: bash
 
       - name: Echo/Set output
