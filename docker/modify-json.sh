@@ -36,4 +36,5 @@ cat "$SERVICES_JSON_PATH"
 UPDATED_JSON=$(<"$SERVICES_JSON_PATH")
 
 # Set the output
-echo "::set-output name=services-updated-json::$UPDATED_JSON"
+# echo "::set-output name=services-updated-json::$UPDATED_JSON"
+echo "UPDATED JSON: $UPDATED_JSON"

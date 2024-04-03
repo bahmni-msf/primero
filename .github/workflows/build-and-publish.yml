@@ -126,6 +126,7 @@ jobs:
         id: update-services
         run: |
           ./docker/modify-json.sh
+          echo "services-updated-json=$UPDATED_JSON"   >> "$GITHUB_OUTPUT"
         shell: bash
 
       - name: Echo/Set output
