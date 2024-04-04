@@ -126,10 +126,8 @@ jobs:
         id: update-services
         run: |
           UPDATED_JSON=$(./docker/modify-json.sh)
-          # Convert JSON to string format
-          SERVICES_UPDATED_JSON=$(echo "$UPDATED_JSON" | jq -c tostring)
-          echo "Services updated JSON: $SERVICES_UPDATED_JSON"
-          echo "::set-output name=services-updated-json::$SERVICES_UPDATED_JSON"
+          echo "Services updated JSON: $UPDATED_JSON"
+          echo "::set-output name=services-updated-json::$UPDATED_JSON"
         shell: bash
 
       - name: Echo/Set output
