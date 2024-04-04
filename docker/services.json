@@ -6,5 +6,13 @@
     "image": "",
     "image-name": "nginx",
     "ecr-repo": "potm/nginx"
+  },
+  {
+    "service_name": "Application",
+    "task_definition": "docker/environment/qa/task_definition/application.json",
+    "container_name": "application",
+    "image": "",
+    "image-name": "application",
+    "ecr-repo": "potm/application"
   }
 ]
