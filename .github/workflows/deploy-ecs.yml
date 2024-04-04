@@ -50,12 +50,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}    # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
 
-    env:
-      ECS_CLUSTER: ${{ github.event.inputs.cluster }}
-      SERVICES: ${{ github.event.inputs.services-json }}
-      BRANCH: ${{ github.event.inputs.branch }}
+    # env:
+    #   ECS_CLUSTER: ${{ github.event.inputs.cluster }}
+    #   SERVICES: ${{ github.event.inputs.services-json }}
+    #   BRANCH: ${{ github.event.inputs.branch }}
 
     steps:
+      - name: Update input values if triggered by workflow_call
+        if: github.event_name == 'workflow_call'
+        run: |
+          echo "Updating input values from workflow_call event"
+          echo ::set-env name=ECS_CLUSTER::${{ github.event.workflow_call.inputs.cluster }}
+          echo ::set-env name=SERVICES::${{ github.event.workflow_call.inputs.services-json }}
+          echo ::set-env name=BRANCH::${{ github.event.workflow_call.inputs.branch }}
+          echo ::set-env name=ENVIRONMENT::${{ github.event.workflow_call.inputs.environment }}
+
       - name: Pull Github code
         uses: actions/checkout@v2
         with:
@@ -76,5 +85,5 @@ jobs:
           ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
           Role_ARN: ${{ secrets.Role_ARN }}
           FS_ID: ${{ secrets.FS_ID }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          # ENVIRONMENT: ${{ github.event.inputs.environment }}
         continue-on-error: false
