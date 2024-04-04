@@ -1,6 +1,6 @@
 [
   {
-    "service_name": "nginx",
+    "service_name": "Nginx",
     "task_definition": "docker/environment/qa/task_definition/nginx.json",
     "container_name": "nginx",
     "image": "",
