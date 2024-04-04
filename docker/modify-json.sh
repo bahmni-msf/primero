@@ -2,6 +2,9 @@
 
 set -euxo pipefail
 
+# Read image names from environment variables
+# echo "Generated Image Names=$IMAGE_NAMES"
+
 # Remove any newline characters from the image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
 
@@ -22,5 +25,7 @@ fi
 # Replace the empty image field with the generated image names
 sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_JSON_PATH"
 
-# Output the updated JSON content directly
-cat "$SERVICES_JSON_PATH"
+# Output the updated JSON content as a string
+UPDATED_JSON=$(cat "$SERVICES_JSON_PATH")
+UPDATED_JSON_STRING=$(echo "$UPDATED_JSON" | jq -c '.')
+echo "$UPDATED_JSON_STRING"
