@@ -157,11 +157,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
             name: updated_json_${{ matrix.service.service_name }}
-            path: updated_json_${{ matrix.service.service_name }}.json
+            path: jsonartifact
         
       - name: Set output for deploy_to_ecs
         id: download-json
-        run: echo "::set-output name=updated-json::$(cat updated_json_${{ matrix.service.service_name }}.json)"
+        run: echo "::set-output name=updated-json::$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json)"
         shell: bash
       
 
