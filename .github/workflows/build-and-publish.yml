@@ -132,7 +132,7 @@ jobs:
 
       - name: Create Artifact - Updated JSON
         run: |
-          echo "${{ steps.update-services.outputs.services-updated-json }}" > updated_json_${{ matrix.service.service_name }}.json
+          echo '${{ steps.update-services.outputs.services-updated-json }}' | jq '.' > updated_json_${{ matrix.service.service_name }}.json
         working-directory: ${{ github.workspace }}
 
       - name: Upload Artifact - Updated JSON
