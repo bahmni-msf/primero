@@ -147,7 +147,7 @@ jobs:
     needs: [update-service-json]
     runs-on: ubuntu-latest
     outputs:
-      updated-json: ${{ toJson(steps.download-json.outputs.updated-json) }}
+      updated-json: ${{ steps.download-json.outputs.updated-json }}
     strategy:
       fail-fast: false
       matrix:
@@ -161,7 +161,7 @@ jobs:
         
       - name: Set output for deploy_to_ecs
         id: download-json
-        run: echo "::set-output name=updated-json::$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json)"
+        run: echo "::set-output name=updated-json::$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json | jq -c)"
         shell: bash
       
 
