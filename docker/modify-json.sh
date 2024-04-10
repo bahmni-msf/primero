@@ -26,7 +26,7 @@ if [ ! -f "$SERVICES_JSON_PATH" ]; then
 fi
 
 # Replace the empty image field with the generated image names for the specified service
-sed -i "/\"service_name\": \"$SERVICE_NAME\"/{N;s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|}" "$SERVICES_JSON_PATH"
+sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_JSON_PATH"
 
 # Filter the JSON array to extract only the object for the specified service
 UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES_JSON_PATH")
