@@ -130,15 +130,44 @@ jobs:
           echo "::set-output name=services-updated-json::$UPDATED_JSON"
         shell: bash
 
-      - name: Echo/Set output
+      - name: Create Artifact - Updated JSON
         run: |
-          echo "Services updated JSON: ${{ steps.update-services.outputs.services-updated-json }}"
+          echo "${{ steps.update-services.outputs.services-updated-json }}" > updated_json_${{ matrix.service.service_name }}.json
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload Artifact - Updated JSON
+        uses: actions/upload-artifact@v2
+        with:
+          name: updated_json_${{ matrix.service.service_name }}
+          path: updated_json_${{ matrix.service.service_name }}.json
+
+
+  download_updated_json:
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [update-service-json]
+    runs-on: ubuntu-latest
+    outputs:
+      updated-json: ${{ steps.download-json.outputs.updated-json }}
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{fromJson(github.event.inputs.services-json)}}
+    steps:
+      - name: Download Updated JSON Artifact
+        uses: actions/download-artifact@v2
+        with:
+            name: updated_json_${{ matrix.service.service_name }}
+            path: updated_json_${{ matrix.service.service_name }}.json
+        
+      - name: Set output for deploy_to_ecs
+        id: download-json
+        run: echo "::set-output name=updated-json::$(cat updated_json_${{ matrix.service.service_name }}.json)"
         shell: bash
       
 
   deploy_to_ecs:
     if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [update-service-json]
+    needs: [download_updated_json]
     strategy:
       fail-fast: false
       matrix:
@@ -148,5 +177,5 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       branch: ${{ github.event.inputs.branch }}
       cluster: ${{ github.event.inputs.cluster }}
-      services-json: ${{ needs.update-service-json.outputs.services-updated-json }}
+      services-json: ${{ needs.download_updated_json.outputs.updated-json }}
     secrets: inherit
