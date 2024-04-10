@@ -2,16 +2,13 @@
 
 set -euxo pipefail
 
-# Read service name and image names from environment variables
-SERVICE_NAME="$1"
+# Read image names from environment variables
+# echo "Generated Image Names=$IMAGE_NAMES"
+
+# Remove any newline characters from the image names
 IMAGE_NAMES=$(echo "$IMAGE_NAMES" | tr -d '\n')
 
-# Check if service name or image names are empty
-if [ -z "$SERVICE_NAME" ]; then
-  echo "Error: Service name not provided."
-  exit 1
-fi
-
+# Check if image names are empty
 if [ -z "$IMAGE_NAMES" ]; then
   echo "Error: No image names were generated."
   exit 1
@@ -25,15 +22,10 @@ if [ ! -f "$SERVICES_JSON_PATH" ]; then
   exit 1
 fi
 
-# Escape special characters in the image name for sed
-ESCAPED_IMAGE_NAMES=$(echo "$IMAGE_NAMES" | sed 's/[\/&]/\\&/g')
-
-# Filter the JSON array to extract only the object for the specified service
-UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES_JSON_PATH")
-
-# Use sed to filter the JSON array and update the image field for the specified service
-# sed -i "/\"service_name\": \"$SERVICE_NAME\"/ {N;s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|}" "$UPDATED_JSON"
-sed -i "/\"service_name\": \"$SERVICE_NAME\"/ {N;s|\"image\": \"\"|\"image\": \"$ESCAPED_IMAGE_NAMES\"|}" "$UPDATED_JSON"
+# Replace the empty image field with the generated image names
+sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_JSON_PATH"
 
 # Output the updated JSON content as a string
-echo "$UPDATED_JSON"
+UPDATED_JSON=$(cat "$SERVICES_JSON_PATH")
+UPDATED_JSON_STRING=$(echo "$UPDATED_JSON" | jq -c '.')
+echo "$UPDATED_JSON_STRING"
