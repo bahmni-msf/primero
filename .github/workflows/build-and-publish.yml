@@ -140,42 +140,51 @@ jobs:
         with:
           name: updated_json_${{ matrix.service.service_name }}
           path: updated_json_${{ matrix.service.service_name }}.json
+      
 
-
-  download_updated_json:
+  deploy:
     if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [update-service-json]
     runs-on: ubuntu-latest
-    outputs:
-      updated-json: ${{ steps.download-json.outputs.updated-json }}
+    needs: [update-service-json]
+    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}    # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
     strategy:
       fail-fast: false
       matrix:
         service: ${{fromJson(github.event.inputs.services-json)}}
+    env:
+      ECS_CLUSTER: ${{ github.event.inputs.cluster }}
+      BRANCH: ${{ github.event.inputs.branch }}
+
     steps:
+      - name: Pull Github code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Download Updated JSON Artifact
         uses: actions/download-artifact@v2
         with:
             name: updated_json_${{ matrix.service.service_name }}
             path: jsonartifact
-        
-      - name: Set output for deploy_to_ecs
-        id: download-json
-        run: echo "::set-output name=updated-json::$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json | jq -c)"
-        shell: bash
-      
 
-  deploy_to_ecs:
-    if: ${{ github.event.inputs.deploy == 'true' }}
-    needs: [download_updated_json]
-    strategy:
-      fail-fast: false
-      matrix:
-        service: ${{fromJson(github.event.inputs.services-json)}}
-    uses: bahmni-msf/primero/.github/workflows/deploy-ecs.yml@ecs-github-workflow
-    with:
-      environment: ${{ github.event.inputs.environment }}
-      branch: ${{ github.event.inputs.branch }}
-      cluster: ${{ github.event.inputs.cluster }}
-      services-json: ${{ needs.download_updated_json.outputs.updated-json }}
-    secrets: inherit
+      - name: Set Updated JSON as Environment Variable
+        run: echo "SERVICES=$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json | jq -c)" >> $GITHUB_ENV
+
+      - name: Update task definition and deploy ECS service
+        run: |
+          chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+          $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+        env:
+          ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
+          Role_ARN: ${{ secrets.Role_ARN }}
+          FS_ID: ${{ secrets.FS_ID }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+        continue-on-error: false
+
