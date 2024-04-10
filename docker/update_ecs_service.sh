@@ -29,8 +29,8 @@ echo "Role_ARN: $Role_ARN"
 echo "ENV_BUCKET: $ENV_BUCKET"
 echo "FS_ID: $FS_ID"
 
-# Loop through services in the JSON
-while IFS= read -r service; do
+# Convert the JSON object into an array and then loop through each object
+echo "$SERVICES" | jq -c '. | [.] | .[]' | while IFS= read -r service; do
     task_definition=$(jq -r '.task_definition' <<< "$service")
     container_name=$(jq -r '.container_name' <<< "$service")
     image=$(jq -r '.image' <<< "$service")
@@ -51,4 +51,5 @@ while IFS= read -r service; do
         --cluster "$ECS_CLUSTER" \
         --service "$service_name" \
         --task-definition "$new_task_definition_arn"
-done <<< "$(echo "$SERVICES" | jq -c '.[]')"
+done
+
