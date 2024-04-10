@@ -147,7 +147,7 @@ jobs:
     needs: [update-service-json]
     runs-on: ubuntu-latest
     outputs:
-      updated-json: ${{ steps.download-json.outputs.updated-json }}
+      updated-json: ${{ toJson(steps.download-json.outputs.updated-json) }}
     strategy:
       fail-fast: false
       matrix:
