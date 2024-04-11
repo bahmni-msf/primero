@@ -17,20 +17,21 @@ if [ -z "$IMAGE_NAMES" ]; then
   exit 1
 fi
 
-# SERVICES="docker/services.json"
+# Create a temporary file to store services JSON
+SERVICES_TMP=$(mktemp)
 
-# Check if services.json exists
-# if [ ! -f "$SERVICES" ]; then
-#   echo "Error: $SERVICES not found."
-#   exit 1
-# fi
+# Copy the services JSON to the temporary file
+cp "$SERVICES" "$SERVICES_TMP"
 
 # Replace the empty image field with the generated image names for the specified service
-sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES"
+sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_TMP"
 
 # Filter the JSON array to extract only the object for the specified service
-UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES")
+UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES_TMP")
 
 # Output the updated JSON content as a string
 UPDATED_JSON_STRING=$(echo "$UPDATED_JSON" | jq -c '.')
 echo "$UPDATED_JSON_STRING"
+
+# Clean up temporary file
+rm "$SERVICES_TMP"
