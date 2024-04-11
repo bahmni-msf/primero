@@ -18,7 +18,7 @@ if [ -z "$IMAGE_NAMES" ]; then
 fi
 
 # Save the JSON data to a temporary file
-echo "$SERVICES_JSON" > /tmp/services.json
+echo "$SERVICES" > /tmp/services.json
 
 # Path to the services JSON file
 SERVICES_FILE="/tmp/services.json"
