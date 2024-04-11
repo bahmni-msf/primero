@@ -17,21 +17,21 @@ if [ -z "$IMAGE_NAMES" ]; then
   exit 1
 fi
 
-# Create a temporary file to store services JSON
-SERVICES_TMP=$(mktemp)
+# Save the JSON data to a temporary file
+echo "$SERVICES_JSON" > /tmp/services.json
 
-# Copy the services JSON to the temporary file
-cp "$SERVICES" "$SERVICES_TMP"
+# Path to the services JSON file
+SERVICES_FILE="/tmp/services.json"
 
 # Replace the empty image field with the generated image names for the specified service
-sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_TMP"
+sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES_FILE"
 
 # Filter the JSON array to extract only the object for the specified service
-UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES_TMP")
+UPDATED_JSON=$(jq --arg service "$SERVICE_NAME" '.[] | select(.service_name == $service)' "$SERVICES_FILE")
 
 # Output the updated JSON content as a string
 UPDATED_JSON_STRING=$(echo "$UPDATED_JSON" | jq -c '.')
 echo "$UPDATED_JSON_STRING"
 
 # Clean up temporary file
-rm "$SERVICES_TMP"
+rm "$SERVICES_FILE"
