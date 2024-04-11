@@ -20,10 +20,10 @@ fi
 # SERVICES="docker/services.json"
 
 # Check if services.json exists
-if [ ! -f "$SERVICES" ]; then
-  echo "Error: $SERVICES not found."
-  exit 1
-fi
+# if [ ! -f "$SERVICES" ]; then
+#   echo "Error: $SERVICES not found."
+#   exit 1
+# fi
 
 # Replace the empty image field with the generated image names for the specified service
 sed -i "s|\"image\": \"\"|\"image\": \"$IMAGE_NAMES\"|g" "$SERVICES"
