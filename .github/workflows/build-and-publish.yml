@@ -124,6 +124,8 @@ jobs:
 
       - name: Update service definitions with image names
         id: update-services
+        env:
+          SERVICES: ${{ github.event.inputs.services-json }}
         run: |
           UPDATED_JSON=$(./docker/modify-json.sh ${{ matrix.service.service_name }})
           echo "Services updated JSON: $UPDATED_JSON"
@@ -146,7 +148,7 @@ jobs:
     if: ${{ github.event.inputs.deploy == 'true' }}
     runs-on: ubuntu-latest
     needs: [update-service-json]
-    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}    # environment: QA_POTMDev ### we can create environments specific to site and environment e.g QA_Iraq
+    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
     strategy:
       fail-fast: false
       matrix:

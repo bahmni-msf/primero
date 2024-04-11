@@ -88,7 +88,6 @@ apply_tags_and_push () {
       ;;
     all)
       eval "${BUILD_APP}" && apply_tags_and_push application
-      # eval "${BUILD_MIGRATION}" && apply_tags_and_push migration
       eval "${BUILD_SOLR}" && apply_tags_and_push solr
       eval "${BUILD_NGINX}" && apply_tags_and_push nginx
       ;;
