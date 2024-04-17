@@ -1,0 +1,192 @@
+name: Build And Publish Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to (Example: qa, staging, production)"
+        required: true
+        default: "qa"
+      branch:
+        description: "Branch to deploy from (default: ecs-github-workflow)"
+        required: true
+        default: "ecs-github-workflow"
+      build:
+        description: "Whether to build or not"
+        required: false
+        default: "true"
+      deploy:
+        description: "Whether to deploy or not"
+        required: false
+        default: "true"
+      services-json:
+        description: "JSON file containing service definitions"
+        required: true
+        default: '[ { "service_name": "application", "task_definition": "docker/environment/qa/task_definition/application.json", "container_name": "Application", "image": "", "image-name": "application", "ecr-repo": "potm/application" }, { "service_name": "nginx", "task_definition": "docker/environment/qa/task_definition/nginx.json", "container_name": "Nginx", "image": "", "image-name": "nginx", "ecr-repo": "potm/nginx" } ]'
+      cluster:
+        type: string
+        description: "Which Cluster to deploy"
+        required: false
+        default: "POTMDev"
+
+jobs:
+  docker-build-publish:
+    name: Docker Build & Publish
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.build == 'true' }}
+    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{fromJson(github.event.inputs.services-json)}}
+    steps:
+      - name: Pull Github code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set Image tag variable
+        run: |
+          pwd
+          echo $GITHUB_RUN_NUMBER
+          echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+
+      - name: Build and Push Docker Image to ECR
+        id: build-and-push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
+        run: |
+          # Run your docker build and push commands here
+          # Store the generated image names
+          IMAGE_NAMES=$(./docker/build.sh "${{ matrix.service.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ matrix.service.ecr-repo }}")
+          echo "IMAGE_NAMES=$IMAGE_NAMES"  >> "$GITHUB_ENV"
+
+      - name: Create Artifact
+        if: always()  # Always execute to create the artifacts
+        run: |
+          echo $IMAGE_NAMES > ${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt
+        working-directory: ${{ github.workspace }}
+        continue-on-error: true
+        
+      - name: Upload Artifacts
+        if: always()  # Always execute to upload the artifacts
+        uses: actions/upload-artifact@v2
+        with:
+            name: ${{ matrix.service.image-name }}-artifact
+            path: ${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt
+
+  update-service-json:
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    needs: [docker-build-publish]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{fromJson(github.event.inputs.services-json)}}
+    outputs:
+      services-updated-json: ${{ steps.update-services.outputs.services-updated-json}}
+    steps:
+
+      - name: Pull Github code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.service.image-name }}-artifact
+          path: artifacts
+    
+      - name: Read Image Names
+        run: |
+          image_file="artifacts/${{ github.run_id }}-${{ matrix.service.image-name }}-image.txt"
+          if [ -f "$image_file" ]; then
+            echo "Image file exists"
+            IMAGE_NAMES=$(cat "$image_file")
+            echo "IMAGE_NAMES=$IMAGE_NAMES"  >> "$GITHUB_ENV"
+          else
+            echo "Image file does not exist"
+            exit 1
+          fi
+
+      - name: Update service definitions with image names
+        id: update-services
+        env:
+          SERVICES: ${{ github.event.inputs.services-json }}
+        run: |
+          UPDATED_JSON=$(./docker/modify-json.sh ${{ matrix.service.service_name }})
+          echo "Services updated JSON: $UPDATED_JSON"
+          echo "::set-output name=services-updated-json::$UPDATED_JSON"
+        shell: bash
+
+      - name: Create Artifact - Updated JSON
+        run: |
+          echo '${{ steps.update-services.outputs.services-updated-json }}' | jq '.' > updated_json_${{ matrix.service.service_name }}.json
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload Artifact - Updated JSON
+        uses: actions/upload-artifact@v2
+        with:
+          name: updated_json_${{ matrix.service.service_name }}
+          path: updated_json_${{ matrix.service.service_name }}.json
+      
+
+  deploy:
+    if: ${{ github.event.inputs.deploy == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [update-service-json]
+    environment: ${{ format('{0}_{1}', github.event.inputs.environment, github.event.inputs.cluster) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{fromJson(github.event.inputs.services-json)}}
+    env:
+      ECS_CLUSTER: ${{ github.event.inputs.cluster }}
+      BRANCH: ${{ github.event.inputs.branch }}
+
+    steps:
+      - name: Pull Github code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Download Updated JSON Artifact
+        uses: actions/download-artifact@v2
+        with:
+            name: updated_json_${{ matrix.service.service_name }}
+            path: jsonartifact
+
+      - name: Set Updated JSON as Environment Variable
+        run: echo "SERVICES=$(cat jsonartifact/updated_json_${{ matrix.service.service_name }}.json | jq -c)" >> $GITHUB_ENV
+
+      - name: Update task definition and deploy ECS service
+        run: |
+          chmod +x $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+          $GITHUB_WORKSPACE/docker/update_ecs_service.sh
+        env:
+          ENV_BUCKET: ${{ secrets.ENV_BUCKET }}
+          Role_ARN: ${{ secrets.Role_ARN }}
+          FS_ID: ${{ secrets.FS_ID }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+        continue-on-error: false
+
