@@ -14,7 +14,7 @@ class RecordJsonValidatorService < JsonValidatorService
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/BlockLength
-  def build_schema(fields)
+  def build_schema(fields, is_subform = false)
     object = { 'type' => 'object', 'properties' => {}, 'additionalProperties' => false }
     return object unless fields.present?
 
@@ -46,7 +46,7 @@ class RecordJsonValidatorService < JsonValidatorService
       when Field::SUBFORM
         properties[field.name] = {
           'type' => %w[array null], 'items' => with_subform_fields(
-            build_schema(field.subform&.fields)
+            build_schema(field.subform&.fields, true)
           )
         }
       when Field::TEXT_FIELD, Field::TEXT_AREA
@@ -57,6 +57,9 @@ class RecordJsonValidatorService < JsonValidatorService
         properties[field.name] = { 'type' => %w[integer string boolean array null],
                                    'minimum' => -2_147_483_648,
                                    'maximum' => 2_147_483_647 }
+      when Field::PHOTO_UPLOAD_BOX
+        # Added Field::PHOTO_UPLOAD_BOX to support Attachement in Subforms
+        properties[field.name] = { 'type' => %w[array string null] } if is_subform
       end
     end
   end
