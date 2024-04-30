@@ -3,42 +3,41 @@
 # Copyright (c) 2014 - 2023 UNICEF. All rights reserved.
 
 mental_health_fields_subform = [
-  Field.new('name' => 'primary_diagnosis_in_protection',
-            'type' => 'select_box',
-            'display_name_en' => 'what is the primary diagnosis in protection',
-            'option_strings_source' => 'lookup lookup-primary_diagnosis_in_protection',
-            'visible' => true),
-  Field.new('name' => 'comments',
-            'type' => 'text_field',
-            'display_name_en' => 'Comments',
-           ),
-Field.new('name' => 'pic',
-          'type' => 'photo_upload_box',
-          'display_name_en' => 'photos',
-          )
-  ]
+  Field.new(name: 'primary_diagnosis_in_protection',
+            type: 'select_box',
+            display_name_en: 'what is the primary diagnosis in protection',
+            option_strings_source: 'lookup lookup-primary_diagnosis_in_protection',
+            visible: true),
+  Field.new(name: 'comments',
+            type: 'text_field',
+            display_name_en: 'Comments'),
+  Field.new(name: 'pic',
+            type: 'photo_upload_box',
+            display_name_en: 'photos')
+]
 
 mental_health_sub_section = FormSection.create_or_update!(
-  'visible' => true,
-  'is_nested' => true,
-  :mobile_form => true,
-  :order_form_group => 70,
-  :order => 1,
-  :order_subform => 2,
-  :unique_id => 'mental_health_sub_section',
-  :parent_form => 'case',
-  'editable' => true,
-  :fields => mental_health_fields_subform,
-  :initial_subforms => 2,
-  'name_en' => 'Nested Mental Health BE',
-  'description_en' => 'Nested Mental Health BE'
- )
+  visible: true,
+  is_nested: true,
+  mobile_form: true,
+  order_form_group: 70,
+  order: 1,
+  order_subform: 2,
+  unique_id: 'mental_health_sub_section',
+  parent_form: 'case',
+  editable: true,
+  fields: mental_health_fields_subform,
+  initial_subforms: 2,
+  name_en: 'Nested Mental Health BE',
+  description_en: 'Nested Mental Health BE'
+)
 
 mental_health_fields = [
-  Field.new('name' => 'pic',
-            'type' => 'photo_upload_box',
-            'display_name_en' => 'photos',
-            ),
+  Field.new(
+    name: 'pic',
+    type: 'photo_upload_box',
+    display_name_en: 'photos'
+  ),
   Field.new(
     name: 'assessment_approved',
     type: 'tick_box',
@@ -83,28 +82,28 @@ mental_health_fields = [
     required: false,
     editable: true
   ),
-    Field.new( 'name' => 'mental_place_of_discharge',
-              'type' => 'select_box',
-              'display_name_en' => 'Mental Place of discharge',
-              'option_strings_source' => 'lookup lookup-place-of-discharge',
-              'disabled' => false,
-              'visible' => true),
-    Field.new(
-      type: 'date_field',
-      display_name_en: 'Date Mental Health',
-      name: 'date_mental_health',
-      required: false,
-      editable: true
-    ),
-   Field.new(
-   'name' => 'mental_health_sub_section',
-   'type' => 'subform',
-   'editable' => true,
-   'subform_section' => mental_health_sub_section ,
-   'display_name_en' => 'Mental Health Sub Form BE',
-   'display_conditions_subform'=> {eq: { mental_place_of_discharge: 'beni_walid' } }
-   )
-  ]
+  Field.new(name: 'mental_place_of_discharge',
+            type: 'select_box',
+            display_name_en: 'Mental Place of discharge',
+            option_strings_source: 'lookup lookup-place-of-discharge',
+            disabled: false,
+            visible: true),
+  Field.new(
+    type: 'date_field',
+    display_name_en: 'Date Mental Health',
+    name: 'date_mental_health',
+    required: false,
+    editable: true
+  ),
+  Field.new(
+    name: 'mental_health_sub_section',
+    type: 'subform',
+    editable: true,
+    subform_section: mental_health_sub_section,
+    display_name_en: 'Mental Health Sub Form BE',
+    display_conditions_subform: { eq: { mental_place_of_discharge: 'beni_walid' } }
+  )
+]
 
 FormSection.create_or_update!(
   unique_id: 'mental_health_assessment',
@@ -117,5 +116,5 @@ FormSection.create_or_update!(
   fields: mental_health_fields,
   editable: false,
   name_en: 'Mental Health Assessment BE changed',
-  description_en: 'Mental Health Assessment Form BE changed',
+  description_en: 'Mental Health Assessment Form BE changed'
 )

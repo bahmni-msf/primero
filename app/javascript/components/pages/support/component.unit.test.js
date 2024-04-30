@@ -46,7 +46,7 @@ describe("<Support />", () => {
           created_by: "primero"
         },
         systemOptions: {
-          code_of_conduct_enabled: true
+          code_of_conduct_enabled: false
         }
       }
     });

@@ -5,20 +5,13 @@ import { fromJS } from "immutable";
 import { FieldRecord, FormSectionRecord, CHECK_BOX_FIELD } from "../../../../form";
 import { RESOURCES, FORM_CHECK_ERRORS } from "../constants";
 import { RECORD_TYPES } from "../../../../../config/constants";
-import { useApp } from "../../../../application";
 
 import { buildPermissionOptions } from "./utils";
 import AssociatedRolesForm from "./associated-roles";
 import InsightsScopeForm from "./insights-scope-form";
 
-export default (resourceActions, i18n, approvalsLabels) =>
+export default (resourceActions, i18n, approvalsLabels, associatedRecordTypes) =>
   RESOURCES.filter(resource => {
-
-    const { userModules } = useApp();
-    const associatedRecordTypes = userModules.reduce((prev, current) => {
-      return prev.concat(current.associated_record_types);
-    }, []);
-
     if (Object.values(RECORD_TYPES).includes(resource) && associatedRecordTypes.includes(resource) == false) {
       return false;
     }

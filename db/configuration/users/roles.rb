@@ -116,11 +116,11 @@ cp_admin_permissions = [
       Permission::DASH_PROTECTION_CONCERNS_BY_LOCATION,
       Permission::DASH_PROTECTION_CONCERNS
     ]
-  ),
-  Permission.new(
-    resource: Permission::CODE_OF_CONDUCT,
-    actions: [Permission::MANAGE]
   )
+  # Permission.new(
+  #   resource: Permission::CODE_OF_CONDUCT,
+  #   actions: [Permission::MANAGE]
+  # )
 ]
 
 create_or_update_role(
@@ -261,11 +261,11 @@ cp_admin_families_permissions = [
       Permission::DASH_PROTECTION_CONCERNS_BY_LOCATION,
       Permission::DASH_PROTECTION_CONCERNS
     ]
-  ),
-  Permission.new(
-    resource: Permission::CODE_OF_CONDUCT,
-    actions: [Permission::MANAGE]
   )
+  # Permission.new(
+  #   resource: Permission::CODE_OF_CONDUCT,
+  #   actions: [Permission::MANAGE]
+  # )
 ]
 
 create_or_update_role(
@@ -323,7 +323,7 @@ cp_caseworker_permissions = [
       Permission::DASH_SHARED_WITH_OTHERS,
       Permission::DASH_SHARED_WITH_ME
     ]
-  ),
+  )
   # Permission.new(
   #   resource: Permission::INCIDENT,
   #   actions: [
@@ -390,7 +390,7 @@ cp_caseworker_families_permissions = [
       Permission::DASH_SHARED_WITH_OTHERS,
       Permission::DASH_SHARED_WITH_ME
     ]
-  ),
+  )
   # Permission.new(
   #   resource: Permission::INCIDENT,
   #   actions: [
@@ -908,11 +908,11 @@ superuser_permissions = [
       Permission::DASH_REPORTING_LOCATION,
       Permission::DASH_PROTECTION_CONCERNS
     ]
-  ),
-  Permission.new(
-    resource: Permission::CODE_OF_CONDUCT,
-    actions: [Permission::MANAGE]
   )
+  # Permission.new(
+  #   resource: Permission::CODE_OF_CONDUCT,
+  #   actions: [Permission::MANAGE]
+  # )
 ]
 
 create_or_update_role(

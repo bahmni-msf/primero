@@ -17,10 +17,11 @@ describe("pages/admin/<RolesForm> - utils", () => {
         formSections: fromJS([]),
         i18n: { t: () => "" },
         approvalsLabels: {},
-        adminLevelMap: fromJS({})
+        adminLevelMap: fromJS({}),
+        associatedRecordTypes: ['case']
       });
 
-      expect(formsToRender).to.have.sizeOf(8);
+      expect(formsToRender).to.have.sizeOf(4);
     });
   });
 

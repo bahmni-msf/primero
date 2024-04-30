@@ -6,7 +6,6 @@ import some from "lodash/some";
 import { array, boolean, object, string } from "yup";
 
 import { RECORD_TYPES } from "../../../../config/constants";
-import { useApp } from "../../../application";
 import {
   FieldRecord,
   FormSectionRecord,
@@ -51,18 +50,14 @@ export const validationSchema = i18n =>
     visible: boolean()
   });
 
-export const settingsForm = ({ formMode, onManageTranslation, onEnglishTextChange, i18n, limitedProductionSite }) => {
-  const { userModules } = useApp();
-  const moduleAssociatedRecordTypes = userModules.reduce(
-    (prev, current) => [
-      ...prev,
-      {
-        id: current.get("unique_id"),
-        associated_record_types: current.get("associated_record_types")
-      }
-    ],
-    []
-  );
+export const settingsForm = ({
+  formMode,
+  onManageTranslation,
+  onEnglishTextChange,
+  i18n,
+  limitedProductionSite,
+  moduleAssociatedRecordTypes
+}) => {
 
   return fromJS([
     FormSectionRecord({
@@ -127,12 +122,13 @@ export const settingsForm = ({ formMode, onManageTranslation, onEnglishTextChang
               clearDependentValues: [FORM_GROUP_FIELD],
               watchedInputs: MODULES_FIELD,
               filterOptionSource: (watchedInputValues, options) => {
-
                 if (watchedInputValues && watchedInputValues.length > 0) {
-                  const associatedRecordTypes = watchedInputValues.map(module_id => {
-                    let selectedModule = moduleAssociatedRecordTypes.find(mod => mod.id == module_id);
-                    return selectedModule.associated_record_types;
-                  }).flat();
+                  const associatedRecordTypes = watchedInputValues
+                    .map(module_id => {
+                      let selectedModule = moduleAssociatedRecordTypes.find(mod => mod.id == module_id);
+                      return selectedModule.associated_record_types;
+                    })
+                    .flat();
 
                   return options.filter(record_type => associatedRecordTypes.includes(record_type.id));
                 }

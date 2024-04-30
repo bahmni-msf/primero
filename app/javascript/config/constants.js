@@ -336,13 +336,13 @@ export const ADMIN_NAV = [
     permission: MANAGE,
     recordType: RESOURCES.systems
   },
-    // code of conduct inside the setting tab
-  // {
-  //   to: "/code_of_conduct",
-  //   label: "settings.navigation.code_of_conduct",
-  //   permission: MANAGE,
-  //   recordType: RESOURCES.codes_of_conduct
-  // },
+  // code of conduct inside the setting tab
+  {
+    to: "/code_of_conduct",
+    label: "settings.navigation.code_of_conduct",
+    permission: MANAGE,
+    recordType: RESOURCES.codes_of_conduct
+  },
   {
     to: "/configurations",
     label: "settings.navigation.configurations",
