@@ -76,7 +76,7 @@ jobs:
   deploy-to-qa:
     name: Deploy
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.build == 'true' }}
+    if: ${{ github.event.inputs.deploy == 'true' }}
     environment:  ${{ github.event.inputs.environment }}
     needs: [docker-build-publish]
     steps:      
