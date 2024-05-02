@@ -114,8 +114,10 @@ jobs:
           ssh_options="-o StrictHostKeyChecking=no"
       
           # SSH into the intermediate host (HOSTNAME) and execute commands securely
+          echo "Remote session to Jump Server"
           ssh ${ssh_options} -i ~/.ssh/id_rsa ${USER_NAME}@${HOSTNAME} << 'EOF'
           # Securely execute commands on the intermediate host
+          echo "Remote session to app server"
           ssh ${ssh_options} ubuntu@${EC2_IP} << 'INNER_EOF'
           # Securely execute commands on the EC2 instance
               # Change directory to your repository
