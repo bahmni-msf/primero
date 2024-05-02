@@ -1,126 +1,48 @@
 # Copyright (c) 2014 - 2023 UNICEF. All rights reserved.
 
 name: App
+
 on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#      - main
   workflow_dispatch:
     inputs:
-      solr_image_name:
-        description: 'Solr Image Name'
+      environment:
+        description: "Environment to refer for variables and secrets"
         required: true
-        default: 'solr'
+        default: "QA_EC2"
+      branch:
+        description: "Branch to deploy from (default: ecs-github-workflow)"
+        required: true
+        default: "ecs-github-workflow"
+      build:
+        description: "Whether to build or not"
+        required: false
+        default: "true"
+      deploy:
+        description: "Whether to deploy or not"
+        required: false
+        default: "true"
+      image-name:
+        description: "Whether to deploy or not"
+        required: false
+        default: "application"
+      ecr-repo:
+        description: "Whether to deploy or not"
+        required: false
+        default: ""
 
 jobs:
-  build-publish-solr:
-    name: Build & Publish Solr
-    runs-on: ubuntu-latest
-    steps:
-      - name: Pull Github code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to AWS ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build Solr Docker Image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: bahmni-msf-primer/solr
-        run: |
-          cd docker && ./build.sh ${{ github.event.inputs.solr_image_name }}
-          docker images
-
-#  server-test:
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-#    name: Backend Tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: ruby/setup-ruby@v1
-#        with:
-#          bundler-cache: true
-#      - name: Build/Run Solr
-#        run: |
-#          cd docker && ./build.sh solr
-#          docker run -v solr_cores:/var/solr primeroims/solr:latest make-primero-core.sh primero-test
-#          docker images
-#          docker run -d -p 8983:8983 -v solr_cores:/var/solr --name=primero_solr_1 primeroims/solr:latest
-#          docker ps
-#      - name: Server tests
-#        run: ./bin/run_server_tests.sh github-actions
-#        shell: bash
-#  client-lint:
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-#    name: Client Linter
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: '18'
-#          cache: 'npm'
-#          cache-dependency-path: '**/package-lock.json'
-#      - name: Run client linter
-#        run: |
-#          npm ci
-#          npm run lint
-#
-#  client-test:
-#    name: Frontend Tests
-#    needs: client-lint
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: '18'
-#          cache: 'npm'
-#          cache-dependency-path: '**/package-lock.json'
-#      - name: Run client tests batch 1
-#        run: |
-#          npm ci
-#          npm run test:batch:1
-#      - name: Run client tests batch 2
-#        run: |
-#          npm ci
-#          npm run test:batch:2
-#      - name: Run client tests batch 3
-#        run: |
-#          npm ci
-#          npm run test:batch:3
-#      - name: Run client tests 4
-#        run: |
-#          npm ci
-#          npm run test:batch:4
-#      - name: Run client tests 5
-#        run: |
-#          npm ci
-#          npm run test:batch:5
-#      - name: Run client tests new
-#        run: |
-#          npm ci
-#          npm run test:new -- --maxWorkers=2
-
   docker-build-publish:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Docker Build & Publish
     runs-on: ubuntu-latest
-#    needs: [server-test, client-test]
+    if: ${{ github.event.inputs.build == 'true' }}
+    environment:  ${{ github.event.inputs.environment }}
+    outputs:
+      image-name: ${{ steps.build-and-push.outputs.image-name }}
     steps:
       - name: Pull Github code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -132,63 +54,95 @@ jobs:
       - name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build Docker Image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: bahmni-msf/primero
-
-        run: |
-          docker build --build-arg APP_ROOT=/srv/primero/application --build-arg RAILS_LOG_PATH=/srv/primero/application/log/primero --build-arg APP_UID=1000 --build-arg APP_GID=1000 -t primero:latest -f  docker/application/Dockerfile .
 
       - name: Set Image tag variable
         run: |
-          echo "ARTIFACT_VERSION=1.0.0-$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          pwd
+          echo $GITHUB_RUN_NUMBER
+          echo "ARTIFACT_VERSION=$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
-      - name: Tag and Push docker image to Amazon ECR
+      - name: Build and Push Docker Image to ECR
+        id: build-and-push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: bahmni-msf/primero
           IMAGE_TAG: ${{ env.ARTIFACT_VERSION }}
         run: |
-          docker tag primero:latest $ECR_REGISTRY/$REPOSITORY:latest
-          docker tag primero:latest $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$REPOSITORY:latest
+          # Run your docker build and push commands here
+          # Store the generated image names
+          IMAGE_NAMES=$(./docker/build.sh "${{ github.event.inputs.image-name }}" -d "${{ steps.login-ecr.outputs.registry }}" -t "${IMAGE_TAG}" -r "${{ github.event.inputs.ecr-repo }}")
+          echo "IMAGE_NAMES=$IMAGE_NAMES"  >> "$GITHUB_ENV"
+          echo "image-name=$IMAGE_NAMES" >> $GITHUB_OUTPUT
 
   deploy-to-qa:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Deploy
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.build == 'true' }}
+    environment:  ${{ github.event.inputs.environment }}
     needs: [docker-build-publish]
-    steps:
+    steps:      
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+  
       - name: Get public IP
         id: ip
         uses: haythem/public-ip@v1.2
+  
       - name: Add Github Actions IP to Security group
         run: |
-          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.BAHMNI_LITE_AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.POTM_AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+  
       - name: Deploy to QA
         env:
-          PRIVATE_KEY: ${{ secrets.BAHMNI_LITE_AWS_SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{ secrets.BAHMNI_LITE_AWS_SSH_HOST }}
-          USER_NAME: ${{ secrets.BAHMNI_LITE_AWS_SSH_USER_NAME }}
-          EC2_IP: ${{ secrets.EC2_PRIMERO_IP }}
+          PRIVATE_KEY: ${{ secrets.POTM_AWS_SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.POTM_AWS_SSH_HOST }}
+          USER_NAME: ${{ secrets.POTM_AWS_SSH_USER_NAME }}
+          EC2_IP: ${{ secrets.EC2_POTM_IP }}
+          SERVICE_NAME: ${{ github.event.inputs.image-name }}
+          IMAGE_NAME: ${{ needs.docker-build-publish.outputs.image-name }}
         run: |
-          echo "$PRIVATE_KEY" > ~/private_key.pem && chmod 400 ~/private_key.pem
-          ssh -i ~/private_key.pem -o StrictHostKeyChecking=no ${USER_NAME}@${HOSTNAME} '
-          echo "${{secrets.BAHMNI_LITE_AWS_SSH_PRIVATE_KEY}}" > ~/private_key.pem && chmod 400 ~/private_key.pem
-          ssh -i ~/private_key.pem ubuntu@${{secrets.EC2_PRIMERO_IP}} "
-            sudo su
-            sudo aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 485402728093.dkr.ecr.ap-south-1.amazonaws.com
-            sudo docker compose pull
-            sudo docker compose up -d
-          "
-          rm ~/private_key.pem
-          '
+          # Create a temporary directory for storing the SSH private key
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.POTM_AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      
+          # Disable strict host key checking to avoid interactive prompt
+          ssh_options="-o StrictHostKeyChecking=no"
+      
+          # SSH into the intermediate host (HOSTNAME) and execute commands securely
+          ssh ${ssh_options} -i ~/.ssh/id_rsa ${USER_NAME}@${HOSTNAME} << 'EOF'
+          # Securely execute commands on the intermediate host
+          ssh ${ssh_options} ubuntu@${EC2_IP} << 'INNER_EOF'
+          # Securely execute commands on the EC2 instance
+              # Change directory to your repository
+              cd /home/ubuntu/primero
+  
+              # Checkout the specified branch
+              git fetch origin ${{ github.event.inputs.branch }}
+              git checkout ${{ github.event.inputs.branch }}
+  
+              # Login to AWS ECR securely
+              aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 485402728093.dkr.ecr.ap-south-1.amazonaws.com
+  
+              # Replace image value in the Docker Compose file on the remote server
+              sed -i "s|image:.*${SERVICE_NAME}.*|image: ${IMAGE_NAME}|" /home/ubuntu/primero/docker/docker-compose.yml
+  
+              # Pull and start the updated containers using Docker Compose
+              # docker-compose -f /home/ubuntu/primero/docker/docker-compose.yml pull
+              # docker-compose -f /home/ubuntu/primero/docker/docker-compose.yml up -d
+
+              # Change directory to your repository
+              cd /home/ubuntu/primero/docker
+
+              ./compose.configure.sh
+              ./compose.prod.sh up -d
+
+          INNER_EOF
+          EOF
+      
+          # Clean up the temporary directory
+          rm -rf ~/.ssh
