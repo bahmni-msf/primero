@@ -12,7 +12,7 @@ on:
       branch:
         description: "Branch to deploy from (default: ecs-github-workflow)"
         required: true
-        default: "ecs-github-workflow"
+        default: "ec2-workflow"
       build:
         description: "Whether to build or not"
         required: false
@@ -22,13 +22,13 @@ on:
         required: false
         default: "true"
       image-name:
-        description: "Whether to deploy or not"
+        description: "Image name to build and deploy"
         required: false
         default: "application"
       ecr-repo:
-        description: "Whether to deploy or not"
+        description: "ecr repository name "
         required: false
-        default: ""
+        default: "potm/application"
 
 jobs:
   docker-build-publish:
