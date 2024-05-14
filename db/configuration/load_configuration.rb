@@ -35,7 +35,12 @@ require "#{File.dirname(__FILE__)}/system_settings/system_settings.rb"
 
 # Create the forms
 puts '[Re-]Seeding the forms'
-Dir["#{File.dirname(__FILE__)}/forms/*/*.rb"].sort.each(&method(:require))
+# Dir["#{File.dirname(__FILE__)}/forms/*/*.rb"].sort.each(&method(:require))
+
+Dir[
+  "#{File.dirname(__FILE__)}/forms/case/*.rb",
+  "#{File.dirname(__FILE__)}/forms/registry/*.rb"
+].sort.each(&method(:require))
 
 # Reseed the default roles and users, and modules
 puts 'Seeding Programs'

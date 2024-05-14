@@ -2,7 +2,7 @@
 
 # Copyright (c) 2014 - 2023 UNICEF. All rights reserved.
 
-unicef = Agency.find_by(agency_code: 'UNICEF')
+msf = Agency.find_by(agency_code: 'MSF')
 
 User.create_or_update!(
   'user_name' => 'primero',
@@ -11,7 +11,7 @@ User.create_or_update!(
   'full_name' => 'System Superuser',
   'email' => 'primero@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('Superuser').id,
   'user_groups' => UserGroup.all,
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -24,7 +24,7 @@ User.create_or_update!(
   'full_name' => 'CP Administrator',
   'email' => 'primero_admin_cp@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Administrator').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -37,7 +37,7 @@ User.create_or_update!(
   'full_name' => 'CP Administrator with Families',
   'email' => 'primero_admin_cp_fam@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Administrator with Families').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP with Families')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -50,7 +50,7 @@ User.create_or_update!(
   'full_name' => 'CP Worker',
   'email' => 'primero_cp@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Case Worker').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -63,7 +63,7 @@ User.create_or_update!(
   'full_name' => 'CP Worker with Families',
   'email' => 'primero_cp_fam@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Case Worker with Families').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP with Families')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -76,7 +76,7 @@ User.create_or_update!(
   'full_name' => 'CP Manager',
   'email' => 'primero_mgr_cp@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Manager').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -89,7 +89,7 @@ User.create_or_update!(
   'full_name' => 'CP Manager with Families',
   'email' => 'primero_mgr_cp_fam@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP Manager with Families').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP with Families')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -102,7 +102,7 @@ User.create_or_update!(
   'full_name' => 'CP User Manager',
   'email' => 'primero_user_mgr_cp@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
+  'agency_id' => msf.id,
   'role_id' => Role.find_by_name('CP User Manager').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -115,8 +115,8 @@ User.create_or_update!(
   'full_name' => 'Agency User Administrator',
   'email' => 'agency_user_admin_cp@primero.com',
   'disabled' => 'false',
-  'agency_id' => unicef.id,
-  'code' => 'UNICEF/AGENCY_USER_ADMIN_CP',
+  'agency_id' => msf.id,
+  'code' => 'msf/AGENCY_USER_ADMIN_CP',
   'role_id' => Role.find_by_name('Agency User Administrator').id,
   'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
   'locale' => Primero::Application::LOCALE_ENGLISH
@@ -130,7 +130,7 @@ if I18n.available_locales.include?(Primero::Application::LOCALE_ARABIC)
     'full_name' => 'CP Worker AR',
     'email' => 'primero_cp_ar@primero.com',
     'disabled' => 'false',
-    'agency_id' => unicef.id,
+    'agency_id' => msf.id,
     'role_id' => Role.find_by_name('CP Case Worker').id,
     'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
     'locale' => Primero::Application::LOCALE_ARABIC
@@ -143,7 +143,7 @@ if I18n.available_locales.include?(Primero::Application::LOCALE_ARABIC)
     'full_name' => 'CP Manager AR',
     'email' => 'primero_mgr_cp_ar@primero.com',
     'disabled' => 'false',
-    'agency_id' => unicef.id,
+    'agency_id' => msf.id,
     'role_id' => Role.find_by_name('CP Manager').id,
     'user_groups' => [UserGroup.find_by(name: 'Primero CP')],
     'locale' => Primero::Application::LOCALE_ARABIC

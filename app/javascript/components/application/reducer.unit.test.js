@@ -19,7 +19,7 @@ describe("Application - Reducers", () => {
 
   const systemOptions = {
     show_alerts: true,
-    code_of_conduct_enabled: true,
+    code_of_conduct_enabled: false,
     due_date_from_appointment_date: true
   };
 
@@ -69,6 +69,20 @@ describe("Application - Reducers", () => {
           associated_record_types: ["case", "incident"],
           options: {
             user_group_filter: true
+          },
+          workflows: {}
+        },
+        {
+          unique_id: "primeromodule-potm",
+          field_map: [],
+          name: "POTM",
+          associated_record_types: ["case"],
+          options: {
+            allow_searchable_ids: true,
+            use_workflow_case_plan: true,
+            use_workflow_assessment: false,
+            reporting_location_filter: false,
+            use_workflow_service_implemented: true
           },
           workflows: {}
         }
@@ -159,6 +173,19 @@ describe("Application - Reducers", () => {
               options: {
                 user_group_filter: true
               }
+            },
+            {
+              unique_id: "primeromodule-potm",
+              field_map: [],
+              name: "POTM",
+              associated_record_types: ["case"],
+              options: {
+                allow_searchable_ids: true,
+                use_workflow_case_plan: true,
+                use_workflow_assessment: false,
+                reporting_location_filter: false,
+                use_workflow_service_implemented: true
+              },
             }
           ],
           default_locale: "en",

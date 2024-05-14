@@ -31,7 +31,7 @@ const Container = ({ mode }) => {
   const isEditOrShow = formMode.get("isEdit") || formMode.get("isShow");
 
   const i18n = useI18n();
-  const { approvalsLabels, limitedProductionSite } = useApp();
+  const { approvalsLabels, limitedProductionSite, userModules } = useApp();
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -60,6 +60,10 @@ const Container = ({ mode }) => {
       })
     );
   };
+
+  const associatedRecordTypes = userModules.reduce((prev, current) => {
+    return prev.concat(current.associated_record_types);
+  }, []);
 
   const handleCancel = () => {
     dispatch(push(ROUTES.admin_roles));
@@ -95,7 +99,8 @@ const Container = ({ mode }) => {
     i18n,
     formMode,
     approvalsLabels,
-    adminLevelMap
+    adminLevelMap,
+    associatedRecordTypes
   });
 
   const initialValues = isCopiedRole

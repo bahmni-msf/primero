@@ -9,6 +9,7 @@ class PrimeroModule < ApplicationRecord
   CP = 'primeromodule-cp'
   GBV = 'primeromodule-gbv'
   MRM = 'primeromodule-mrm'
+  POTM = 'primeromodule-potm'
 
   # allow_searchable_ids: TODO document
   # selectable_approval_types: TODO document
@@ -34,7 +35,7 @@ class PrimeroModule < ApplicationRecord
   has_and_belongs_to_many :roles, -> { distinct }
 
   validates :name, presence: { message: I18n.t('errors.models.primero_module.name_present') },
-                   uniqueness: { message: I18n.t('errors.models.primero_module.unique_name') }
+            uniqueness: { message: I18n.t('errors.models.primero_module.unique_name') }
   validates_presence_of :associated_record_types,
                         message: I18n.t('errors.models.primero_module.associated_record_types')
 
@@ -74,6 +75,10 @@ class PrimeroModule < ApplicationRecord
 
   def self.mrm
     find_by(unique_id: MRM)
+  end
+
+  def self.potm
+    find_by(unique_id: POTM)
   end
 
   def form_section_unique_ids

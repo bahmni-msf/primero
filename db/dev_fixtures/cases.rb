@@ -7,13 +7,13 @@ filler_cases = (0..25).inject({}) do |acc, i|
   acc.merge({ ('ff928802-455b-4735-9e5c-4ed9acace1%.2d' % i) => lambda do |c|
     c.name = "Child #{i}"
     c.created_at = DateTime.new(2014, 0o1, 0o1)
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
   end })
 end
 
 {
   'ff928802-455b-4735-9e5c-4ed9acace001' => lambda do |c|
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
     c.name = 'David Thomas'
     c.hidden_name = true
     c.family_details_section = [
@@ -34,7 +34,7 @@ end
 
   'ef928802-455b-4735-9e5c-4ed9acace002' => lambda do |c|
     c.name = 'Jonah Jacobson'
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
     c.sex = 'Male'
     c.religion = ['Religion1']
     c.ethnicity = ['Kenyan']
@@ -50,7 +50,7 @@ end
   end,
 
   'df928802-455b-4735-9e5c-4ed9acace004' => lambda do |c|
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
     c.name = 'Child Low Risk Level'
     c.sex = 'Female'
     c.registration_date = Date.today - 1.month
@@ -65,7 +65,7 @@ end
   end,
 
   'df928802-455b-4735-9e5c-4ed9acace005' => lambda do |c|
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
     c.name = 'Child Medium Risk Level'
     c.sex = 'Female'
     c.registration_date = Date.today - 1.month
@@ -85,7 +85,7 @@ end
   end,
 
   'df928802-455b-4735-9e5c-4ed9acace006' => lambda do |c|
-    c.module_id = 'primeromodule-cp'
+    c.module_id = 'primeromodule-potm'
     c.name = 'Child High Risk Level'
     c.sex = 'Female'
     c.registration_date = Date.today - 1.month

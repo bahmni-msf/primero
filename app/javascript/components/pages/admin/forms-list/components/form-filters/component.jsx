@@ -12,6 +12,9 @@ import { ACTION_BUTTON_TYPES } from "../../../../../action-button/constants";
 
 const Component = ({ filterValues, modules, handleSetFilterValue, handleClearValue, disabled }) => {
   const i18n = useI18n();
+  const associatedRecordTypes = modules.reduce((prev, current) => {
+    return prev.concat(current.associated_record_types);
+  }, []);
 
   const filters = [
     {
@@ -20,7 +23,7 @@ const Component = ({ filterValues, modules, handleSetFilterValue, handleClearVal
       options: Object.values(RECORD_TYPES).reduce((prev, current) => {
         const obj = prev;
 
-        if (current !== RECORD_TYPES.all) {
+        if (current !== RECORD_TYPES.all && associatedRecordTypes.includes(current)) {
           obj.push({
             displayName: i18n.t(`forms.record_types.${current}`),
             id: current

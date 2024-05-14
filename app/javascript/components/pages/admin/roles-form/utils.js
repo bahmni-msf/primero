@@ -7,6 +7,7 @@ import { ERROR_FIELD, FieldRecord, FormSectionRecord } from "../../../form";
 
 import { AssociatedFormSectionsForm, ResourcesForm, RolesMainForm } from "./forms";
 import { FORM_CHECK_ERRORS, ROLES_PERMISSIONS } from "./constants";
+import { useApp } from "../../../application";
 
 const getFormPermission = permission => {
   switch (permission) {
@@ -25,7 +26,8 @@ export const getFormsToRender = ({
   i18n,
   formMode,
   approvalsLabels,
-  adminLevelMap
+  adminLevelMap,
+  associatedRecordTypes
 }) => {
   return fromJS(
     [
@@ -41,12 +43,17 @@ export const getFormsToRender = ({
           })
         ]
       }),
-      ResourcesForm(systemPermissions.get("resource_actions", fromJS({})), i18n, approvalsLabels),
+      ResourcesForm(
+        systemPermissions.get("resource_actions", fromJS({})),
+        i18n,
+        approvalsLabels,
+        associatedRecordTypes
+      ),
       FormSectionRecord({
         unique_id: "forms_label",
         name: { [i18n.locale]: i18n.t("forms.label") }
       }),
-      AssociatedFormSectionsForm(formSections, i18n, formMode)
+      AssociatedFormSectionsForm(formSections, i18n, associatedRecordTypes)
     ].flat()
   );
 };
