@@ -482,6 +482,8 @@ class Filter < ValueObject
     end
 
     def reporting_location_filters(user)
+      # Additonal check to remove district filter for POTM
+      return [] if user.module?(PrimeroModule::POTM)
       return [] unless user.module?(PrimeroModule::CP)
 
       role = user&.role
